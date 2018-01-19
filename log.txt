@@ -1,5 +1,0 @@
-
-Info (Main):  Bytes received: 3
-Info (Main):  Connection closed
-
-Debug (N/A):  all data =  Hi!

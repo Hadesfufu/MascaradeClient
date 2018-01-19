@@ -17,19 +17,20 @@ public:
 	void connect(std::string address, int port);
 	void disconnect();
 
-	void send(std::string string);
-	std::string receive();
-	
+	void send(sf::Packet&);
+	sf::Packet* receive();
+
 	int getRemotePort() { return m_socket.getRemotePort(); }
 	int getLocalPort() { return m_socket.getLocalPort(); }
 	std::string getAddress() { return m_socket.getRemoteAddress().toString(); }
 
+	sf::Packet* getPacket() { return &m_lastReceivedPacket; }
 private:
 
 	void appendString(std::string& s, char* c, int nb);
 	sf::TcpSocket m_socket;
+	sf::Packet					m_lastReceivedPacket;
 
-	static const std::string eom;
 };
 
 #endif

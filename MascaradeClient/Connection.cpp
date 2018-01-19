@@ -1,8 +1,6 @@
 #include "Connection.h"
 #include "Log.h"
 
-const std::string Connection::eom = "eom;";
-
 Connection::Connection()
 {
 }
@@ -19,36 +17,26 @@ void Connection::connect(std::string address, int port)
 	{
 		Log::error("Connection") << "Error while connecting : " << status;
 	}
+	m_socket.setBlocking(false);
 }
 
-void Connection::send(std::string send)
+void Connection::send(sf::Packet& packet)
 {
-	send += eom;
-	sf::Socket::Status status = m_socket.send(send.c_str(), send.size());
-	if (status != sf::Socket::Done)
+	if (m_socket.send(packet) != sf::Socket::Done)
 	{
-		Log::error("Connection") << "Error while sending to client : " << status;
+		Log::error("Connection-send-string") << "Error while sending to client";
 	}
 }
 
-std::string Connection::receive()
+sf::Packet* Connection::receive()
 {
-	std::string returner="";
-	size_t size = 32;
-	char data[32];
-	std::size_t received;
-
-	while (returner.find(eom) == std::string::npos) {
-		if (m_socket.receive(data, size, received) != sf::Socket::Done)
-		{
-			Log::error("MascaradeServer") << "Error while receiving";
-		}
-		appendString(returner, data, received);
-		Log::debug() << "new loop";
+	if (m_socket.receive(m_lastReceivedPacket) != sf::Socket::Done)
+	{
+		Log::error("MascaradeServer") << "Error while receiving";
 	}
-	returner.erase(returner.end() - 4,returner.end());
-	return returner;
+	return &m_lastReceivedPacket;
 }
+
 
 void Connection::disconnect()
 {

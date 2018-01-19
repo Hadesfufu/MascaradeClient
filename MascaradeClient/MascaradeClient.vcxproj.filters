@@ -102,6 +102,9 @@
     <ClCompile Include="Connection.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="MascaradeClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System\FontHolder.h">
@@ -183,6 +186,9 @@
       <Filter>Header Files\System</Filter>
     </ClInclude>
     <ClInclude Include="Connection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MascaradeClient.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
