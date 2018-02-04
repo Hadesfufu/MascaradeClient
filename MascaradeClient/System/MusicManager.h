@@ -5,7 +5,7 @@
 #include "SFML\Audio.hpp"
 #include "Singleton.h"
 #include "Log.h"
-#include "Parameters.h"
+#include "Data.h"
 #include "pugixml.hpp"
 
 typedef std::vector<std::shared_ptr<sf::Music>> MusicList;

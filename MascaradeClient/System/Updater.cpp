@@ -2,9 +2,9 @@
 #include "Updater.h"
 #include <thread>
 #include <iostream>
-#include "Parameters.h"
+#include "Data.h"
 
-Updater::Updater() : m_nbThreads(std::thread::hardware_concurrency()-1), m_Threadified(*Parameters::I()->getBool("UpdateThread"))
+Updater::Updater() : m_nbThreads(std::thread::hardware_concurrency()-1), m_Threadified(Data::json().at("UpdateThread"))
 {
 	if(m_Threadified){
 		m_ThreadData =	new ThreadData[m_nbThreads];

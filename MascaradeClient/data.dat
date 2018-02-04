@@ -1,0 +1,14 @@
+{
+  "VerticalSync": true,
+  "Buffering": false,
+  "AntiAliasing": false,
+  "FullScreen": false,
+  "WindowSize": {
+    "x": 1280,
+    "y": 720
+  },
+  "FrameRate": 60,
+  "host": localhost,
+  "port": 53000,
+  "UpdateThread": false
+}

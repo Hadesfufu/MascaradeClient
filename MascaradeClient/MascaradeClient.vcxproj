@@ -171,7 +171,6 @@
     <ClCompile Include="Drawing\DrawingAnimationScale.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MascaradeClient.cpp" />
-    <ClCompile Include="pugixml\pugixml.cpp" />
     <ClCompile Include="System\debug.cpp" />
     <ClCompile Include="System\FontHolder.cpp" />
     <ClCompile Include="System\InputKey.cpp" />
@@ -179,7 +178,7 @@
     <ClCompile Include="System\Log.cpp" />
     <ClCompile Include="System\MusicManager.cpp" />
     <ClCompile Include="System\NotificationManager.cpp" />
-    <ClCompile Include="System\Parameters.cpp" />
+    <ClCompile Include="System\Data.cpp" />
     <ClCompile Include="System\SoundHolder.cpp" />
     <ClCompile Include="System\TextureHolder.cpp" />
     <ClCompile Include="System\Updatable.cpp" />
@@ -197,16 +196,15 @@
     <ClInclude Include="Drawing\DrawingAnimationRotation.h" />
     <ClInclude Include="Drawing\DrawingAnimationScale.h" />
     <ClInclude Include="MascaradeClient.h" />
-    <ClInclude Include="pugixml\pugiconfig.hpp" />
-    <ClInclude Include="pugixml\pugixml.hpp" />
     <ClInclude Include="System\debug.h" />
     <ClInclude Include="System\FontHolder.h" />
     <ClInclude Include="System\InputKey.h" />
     <ClInclude Include="System\InputManager.h" />
+    <ClInclude Include="System\json.hpp" />
     <ClInclude Include="System\Log.h" />
     <ClInclude Include="System\MusicManager.h" />
     <ClInclude Include="System\NotificationManager.h" />
-    <ClInclude Include="System\Parameters.h" />
+    <ClInclude Include="System\Data.h" />
     <ClInclude Include="System\reversableHashTable.h" />
     <ClInclude Include="System\Semaphore.h" />
     <ClInclude Include="System\Singleton.h" />

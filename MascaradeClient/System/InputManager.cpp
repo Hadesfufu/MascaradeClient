@@ -9,7 +9,7 @@
 #include <functional>
 #include "InputManager.h"
 #include "NotificationManager.h"
-#include "Parameters.h"
+#include "Data.h"
 #include <winuser.h>
 #include "debug.h"
 
@@ -33,9 +33,9 @@ namespace Input{
 	}
 	Manager::~Manager()
 	{
-		const std::string *inputMapPathPtr = Parameters::I()->getString(INPUTMAP_PARAMETER_PATH_STR);
+		const std::string *inputMapPathPtr = Data::I()->getString(INPUTMAP_PARAMETER_PATH_STR);
 		if (!inputMapPathPtr){
-			Log::error("InputManager") << "can not find inputMap path in Parameters file, save unabled\n";
+			Log::error("InputManager") << "can not find inputMap path in Data file, save unabled\n";
 		}
 
 		m_inputFile.save_file(inputMapPathPtr->c_str());
@@ -151,9 +151,9 @@ namespace Input{
 	}
 
 	bool Manager::loadInput(){
-		const std::string *inputMapPathPtr = Parameters::I()->getString(INPUTMAP_PARAMETER_PATH_STR);
+		const std::string *inputMapPathPtr = Data::I()->getString(INPUTMAP_PARAMETER_PATH_STR);
 		if (!inputMapPathPtr){
-			Log::error("InputManager") << "can not find inputMap path in Parameters file";
+			Log::error("InputManager") << "can not find inputMap path in Data file";
 			return false;
 		}
 		

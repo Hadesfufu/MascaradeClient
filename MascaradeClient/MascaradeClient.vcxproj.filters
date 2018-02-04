@@ -25,12 +25,6 @@
     <Filter Include="Source Files\Drawing">
       <UniqueIdentifier>{3745555a-67b1-4ed1-afe2-ea843bd39d5e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\pugi">
-      <UniqueIdentifier>{6b0c1547-3ffa-4ad9-b4bf-330d08bc90a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\pugi">
-      <UniqueIdentifier>{0917f497-eeda-4b41-9a3b-338656993d18}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="System\FontHolder.cpp">
@@ -46,9 +40,6 @@
       <Filter>Source Files\System</Filter>
     </ClCompile>
     <ClCompile Include="System\NotificationManager.cpp">
-      <Filter>Source Files\System</Filter>
-    </ClCompile>
-    <ClCompile Include="System\Parameters.cpp">
       <Filter>Source Files\System</Filter>
     </ClCompile>
     <ClCompile Include="System\SoundHolder.cpp">
@@ -90,9 +81,6 @@
     <ClCompile Include="Drawing\Camera.cpp">
       <Filter>Source Files\Drawing</Filter>
     </ClCompile>
-    <ClCompile Include="pugixml\pugixml.cpp">
-      <Filter>Source Files\pugi</Filter>
-    </ClCompile>
     <ClCompile Include="System\Log.cpp">
       <Filter>Source Files\System</Filter>
     </ClCompile>
@@ -104,6 +92,9 @@
     </ClCompile>
     <ClCompile Include="MascaradeClient.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="System\Data.cpp">
+      <Filter>Source Files\System</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -120,9 +111,6 @@
       <Filter>Header Files\System</Filter>
     </ClInclude>
     <ClInclude Include="System\NotificationManager.h">
-      <Filter>Header Files\System</Filter>
-    </ClInclude>
-    <ClInclude Include="System\Parameters.h">
       <Filter>Header Files\System</Filter>
     </ClInclude>
     <ClInclude Include="System\reversableHashTable.h">
@@ -173,12 +161,6 @@
     <ClInclude Include="Drawing\Camera.h">
       <Filter>Header Files\Drawing</Filter>
     </ClInclude>
-    <ClInclude Include="pugixml\pugiconfig.hpp">
-      <Filter>Header Files\pugi</Filter>
-    </ClInclude>
-    <ClInclude Include="pugixml\pugixml.hpp">
-      <Filter>Header Files\pugi</Filter>
-    </ClInclude>
     <ClInclude Include="System\Log.h">
       <Filter>Header Files\System</Filter>
     </ClInclude>
@@ -190,6 +172,12 @@
     </ClInclude>
     <ClInclude Include="MascaradeClient.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System\json.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="System\Data.h">
+      <Filter>Header Files\System</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

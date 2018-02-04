@@ -19,8 +19,9 @@ MusicManager::~MusicManager()
 }
 
 void MusicManager::changeVolume(){
-	Parameters *param = Parameters::I();
-	float volume = (float)*param->getInt("MusicVolume") * (float)*param->getInt("GlobalVolume") / 100.0f;
+	float MusicVolume = Data::json().at("MusicVolume");
+	float GlobalVolume = Data::json().at("GlobalVolume");
+	float volume = MusicVolume * GlobalVolume / 100.0f;
 	m_MusicDataAccess.lock();
 	for (auto it = m_MusicPlayList.begin(); it != m_MusicPlayList.end(); ++it){
 		for (auto it2 = it->second.begin(); it2 != it->second.end(); ++it2){
@@ -30,32 +31,22 @@ void MusicManager::changeVolume(){
 	m_MusicDataAccess.unlock();
 }
 
-void MusicManager::loadXML(){
-	pugi::xml_document doc;
-	if (!doc.load_file(Parameters::I()->getString("PlayListFile")->c_str())){
-		Log::error("Parameters") << "Unable to open the parameters file";
-		system("dir");
-		return;
-	}
+void MusicManager::loadXML() {
 
-	pugi::xml_node root = doc.first_child();
-	pugi::xml_node elem = root.child("PlayList");
-	pugi::xml_node track = elem.child("Track");
+	json playLists = Data::json().at("Playlists");
 	std::string playlistname;
-	while (elem){
-		track = elem.child("Track");
-		playlistname = elem.attribute("name").as_string();
+	std::string path;
+	for (auto& playlist : playLists)
+	{
+		playlistname = playlist.at("name");
 		m_MusicPlayList.emplace(playlistname, MusicList());
-		while (track){
+		for (auto& track : playlist.at("tracks"))
+		{
 			m_MusicPlayList[playlistname].push_back(std::make_shared<sf::Music>());
-			m_MusicPlayList[playlistname].back()->openFromFile(track.attribute("path").as_string());
-			Parameters *param = Parameters::I();
-			float volume = (float)*param->getInt("MusicVolume") * (float)*param->getInt("GlobalVolume") / 100.0f;
-			m_MusicPlayList[playlistname].back()->setVolume(volume);
-			Log::info("MusicManager") << "Music Loaded for Playlist:" << playlistname << "- Song :" << track.attribute("path").as_string();
-			track = track.next_sibling();
+			path = track.at("path");
+			m_MusicPlayList[playlistname].back()->openFromFile(path);
+			Log::info("MusicManager") << "Music Loaded for Playlist:" << playlistname << "- Song :" << path;
 		}
-		elem = elem.next_sibling();
 	}
 }
 
