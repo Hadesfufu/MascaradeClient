@@ -45,7 +45,7 @@ void MascaradeClient::login()
 
 void MascaradeClient::loadWindow()
 {
-	int windowMode = Data::json().at("FullScreen");
+	int windowMode = Data::I()->data.at("FullScreen");
 	int width = Data::json().at("WindowSize").at("x");
 	int height = Data::json().at("WindowSize").at("y");
 	std::string ApplicationName = Data::json().at("Application Name");

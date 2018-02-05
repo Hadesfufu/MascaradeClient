@@ -10,6 +10,7 @@
 #include "InputManager.h"
 #include "NotificationManager.h"
 #include "Data.h"
+#include "json.hpp"
 #include <winuser.h>
 #include "debug.h"
 
@@ -33,12 +34,7 @@ namespace Input{
 	}
 	Manager::~Manager()
 	{
-		const std::string *inputMapPathPtr = Data::I()->getString(INPUTMAP_PARAMETER_PATH_STR);
-		if (!inputMapPathPtr){
-			Log::error("InputManager") << "can not find inputMap path in Data file, save unabled\n";
-		}
-
-		m_inputFile.save_file(inputMapPathPtr->c_str());
+	
 	}
 
 	bool Manager::handelInputEvent(sf::Event windowEvent){
@@ -151,42 +147,29 @@ namespace Input{
 	}
 
 	bool Manager::loadInput(){
-		const std::string *inputMapPathPtr = Data::I()->getString(INPUTMAP_PARAMETER_PATH_STR);
-		if (!inputMapPathPtr){
-			Log::error("InputManager") << "can not find inputMap path in Data file";
-			return false;
-		}
-		
-		m_inputFile.load_file(inputMapPathPtr->c_str());
-		pugi::xml_node inputs = m_inputFile.child("map");
-		pugi::xml_node input = inputs.first_child();
-		while (input){
+		nlohmann::json& inputs = Data::json().at("InputMap");
+		for (nlohmann::json& input : inputs) {
 			loadAction(input);
-			input = input.next_sibling();
 		}
-
 		return true;
 	}
-	void Manager::loadAction(pugi::xml_node actionXml){
-		std::string action = actionXml.attribute("action").as_string();
+
+	void Manager::loadAction(nlohmann::json& input){
+		std::string action = input.at("action");
 		auto defaultActions = m_defaultKey.find(action);
 		if (defaultActions == m_defaultKey.end()){
 			defaultActions = m_defaultKey.emplace(action, std::map<std::string, Key>()).first;
 		}
 
-		pugi::xml_node localisation = actionXml.child("keyboard");
-		while (localisation){
-			std::string layout = localisation.attribute("language").as_string();
-
+		for (auto& localisation : input.at("keyboard")) {
+			std::string layout = localisation.at("language");
 			Key linkedKey = keyboardKey(localisation);
 			auto paired = std::pair<std::string, Key>(layout, linkedKey);
 			defaultActions->second.insert(paired);
-
-			localisation = localisation.next_sibling("keyboard");
 		}
 
-		pugi::xml_node defaultInput = actionXml.child("default");
-		std::string type = defaultInput.attribute("type").as_string();
+		nlohmann::json& defaultInput = input.at("default");
+		std::string type = defaultInput.at("type");
 		if (type == "mouse") {
 			auto pairedKey = std::pair<std::string, Key>(INPUTMAP_DEFAULT_KEY_STR, mouseKey(defaultInput));
 			defaultActions->second.insert(pairedKey);
@@ -198,14 +181,14 @@ namespace Input{
 		else
 			GfxDbgAssert(false, "unexpected type for input");
 
-		pugi::xml_node defaultJoystick = actionXml.child("defaultJoystick");
-		std::string codeJoystick = defaultJoystick.attribute("code").as_string();
+		nlohmann::json& defaultJoystick = input.at("defaultJoystick");
+		std::string codeJoystick = defaultJoystick.at("code");
 		auto pairedKeyJoystick = std::pair<std::string, Key>(INPUTMAP_DEFAULT_JOYSTICK_STR, joystickKey(defaultJoystick));
 		defaultActions->second.insert(pairedKeyJoystick);
 
-		pugi::xml_node userDefault = actionXml.child("user");
-		if (userDefault) {
-			std::string type = userDefault.attribute("type").as_string();
+		if (input.find("user") != input.end()) {
+			nlohmann::json& userDefault = input.at("user");
+			std::string type = userDefault.at("type");
 			if (type == "mouse") {
 				Key key = mouseKey(userDefault);
 				m_keyboardActions.link(key, action);
@@ -220,21 +203,22 @@ namespace Input{
 		else
 			loadDefaultKeyForAction(action, false);
 
-		pugi::xml_node userJoystick = actionXml.child("userJoystick");
-		if (userJoystick){
+		if (input.find("userJoystick") != input.end()){
+			nlohmann::json& userJoystick = input.at("userJoystick");
 			Key userKey = joystickKey(userJoystick);
 			m_keyboardActions.link(userKey, action);
 		}
 		else 
 			loadDefaultKeyForAction(action, true);
 	}
-	Key Manager::keyboardKey(pugi::xml_node keyXml) {
-		std::string keyCode = keyXml.attribute("key").as_string();
-		std::string status = keyXml.attribute("status").as_string();
-		std::string isAlt = keyXml.attribute("alt").as_string();
-		std::string isShift = keyXml.attribute("shift").as_string();
-		std::string isCtrl = keyXml.attribute("ctrl").as_string();
-		std::string isWindow = keyXml.attribute("window").as_string();
+
+	Key Manager::keyboardKey(nlohmann::json& key) {
+		std::string keyCode = key.at("key");
+		std::string status = key.at("status");
+		std::string isAlt = key.at("alt");
+		std::string isShift = key.at("shift");
+		std::string isCtrl = key.at("ctrl");
+		std::string isWindow = key.at("window");
 
 		return Key::KeyForKeyboard((sf::Keyboard::Key)std::stoi(keyCode),
 			statusForKey(status),
@@ -243,14 +227,14 @@ namespace Input{
 			std::stoi(isCtrl) == 1,
 			std::stoi(isWindow) == 1);
 	}
-	Key Manager::mouseKey(pugi::xml_node keyXml) {
-		std::string keyCode = keyXml.attribute("key").as_string();
-		std::string status = keyXml.attribute("status").as_string();
+	Key Manager::mouseKey(nlohmann::json& key) {
+		std::string keyCode = key.at("key");
+		std::string status = key.at("status");
 
 		return Key::KeyForMouse(statusForKey(status),
 			(sf::Mouse::Button)std::stoi(keyCode));
 	}
-	Key Manager::joystickKey(pugi::xml_node keyXml) {
+	Key Manager::joystickKey(nlohmann::json& keyXml) {
 		return Key::ErrorKey();
 	}
 	unsigned int Manager::statusForKey(std::string status) {

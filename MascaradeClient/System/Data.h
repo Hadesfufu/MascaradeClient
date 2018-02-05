@@ -22,9 +22,14 @@ class Data : public Singleton<Data>
 	friend class Singleton < Data > ;
 public:
 	
-	json& getJson() { return m_json; };
+	json& getJson() { return data; };
 
 	static json& json() { return Data::I()->getJson(); }
+	
+	static bool exist(std::string& str) { return (Data::json().find(str) != Data::json().end()); }
+	static bool exist(const char* str) { return (Data::json().find(str) != Data::json().end()); }
+
+	nlohmann::json data;
 
 private:
 	 Data();
@@ -36,7 +41,6 @@ private:
     // Members
     ////////////////////////////////////////////////////////////
 	
-	nlohmann::json m_json;
 	std::fstream m_fileStream;
 };
 #endif 

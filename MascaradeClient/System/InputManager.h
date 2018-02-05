@@ -7,7 +7,7 @@
 #include "Singleton.h"
 #include "InputKey.h"
 #include "reversableHashTable.h"
-#include "pugixml.hpp"
+#include "json.hpp"
 
 #define WINDOW_MODE_WINDOWED				0
 #define WINDOW_MODE_FULLSCREEN				1
@@ -77,18 +77,17 @@ namespace Input{
 		Manager();
 		Manager(const Manager&) = delete;
 		~Manager();
-
 		void							callClickingActions();
 
 		bool							loadDefaultKeyForAction(std::string, bool);
 
 		bool							loadInput();
 //	healpers
-		void							loadAction(pugi::xml_node);
-		Key								keyboardKey(pugi::xml_node);
-		Key								mouseKey(pugi::xml_node);
+		void							loadAction(nlohmann::json& action);
+		Key								keyboardKey(nlohmann::json&);
+		Key								mouseKey(nlohmann::json&);
 		//	todo
-		Key								joystickKey(pugi::xml_node);
+		Key								joystickKey(nlohmann::json& );
 		unsigned int					statusForKey(std::string);
 
 		bool							handleKeyboardEvent(sf::Event &);
@@ -96,7 +95,6 @@ namespace Input{
 
 	private:
 		bool												m_usingJoystick;
-		pugi::xml_document									m_inputFile;
 
 		ReversableHashTable<Key, std::string>				m_keyboardActions;
 		std::map<std::string, std::map<std::string, Key>>	m_defaultKey;

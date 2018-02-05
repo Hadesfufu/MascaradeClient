@@ -6,7 +6,7 @@ Data::Data()
 }
 Data::~Data()
 {
-	m_fileStream << m_json;
+	m_fileStream << data;
 	m_fileStream.close();
 }
 
@@ -15,7 +15,7 @@ void Data::load(void){
 		m_fileStream.open("data.dat", std::fstream::in | std::fstream::out);
 		if (!m_fileStream.is_open())
 			Log::error("Data::load") << "file not found";
-		m_fileStream >> m_json;
+		m_fileStream >> data;
 	}
 	catch(std::fstream::failure e)
 	{

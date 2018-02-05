@@ -18,7 +18,7 @@
 #include "DrawingAnimationRotation.h"
 #include "DrawingAnimationScale.h"
 #include "DrawingAnimationFade.h"
-#include "pugixml.hpp"
+#include "Data.h"
 #include "Camera.h"
 
 class Drawer : public Singleton<Drawer>
@@ -52,7 +52,7 @@ public:
     ////////////////////////////////////////////////////////////
     // Add elements to parallax
     ////////////////////////////////////////////////////////////
-	void addParallax(pugi::xml_node& data);
+	void addParallax(json& data);
 	
     ////////////////////////////////////////////////////////////
     // Hide the layer

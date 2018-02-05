@@ -206,17 +206,9 @@ bool Drawer::setWindow(sf::RenderWindow* window){
 
 void Drawer::loadStaticLayers()
 {
-	std::string path = "data/maps/StaticLayers.xml";
-	pugi::xml_document doc;
-	if (!doc.load_file(path.c_str()))
-	{
-		Log::error("Drawer - LoadStaticLayers") << "Failing opening static layers file" << "Path :" << path;
-		return;
-	}
-	pugi::xml_node layer = doc.first_child().child("layer");
-	while (layer)
-	{
-		m_StaticLayers.emplace(layer.attribute("name").as_string(), layer.attribute("id").as_int());
-		layer = layer.next_sibling();
+	if (Data::exist("StaticLayers")) {
+		for (auto& layer : Data::json().at("StaticLayers")) {
+			m_StaticLayers.emplace(layer.at("name"), layer.at("id"));
+		}
 	}
 }

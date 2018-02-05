@@ -1,4 +1,5 @@
 {
+  "Application Name": "Mascarade",
   "VerticalSync": true,
   "Buffering": false,
   "AntiAliasing": false,
@@ -8,7 +9,9 @@
     "y": 720
   },
   "FrameRate": 60,
-  "host": localhost,
+  "host": "localhost",
   "port": 53000,
-  "UpdateThread": false
+  "UpdateThread": false,
+  "InputMap": [
+  ]
 }
