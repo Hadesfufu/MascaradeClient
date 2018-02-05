@@ -96,6 +96,9 @@
     <ClCompile Include="System\Data.cpp">
       <Filter>Source Files\System</Filter>
     </ClCompile>
+    <ClCompile Include="InputManagerBeta.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System\FontHolder.h">
@@ -179,5 +182,11 @@
     <ClInclude Include="System\Data.h">
       <Filter>Header Files\System</Filter>
     </ClInclude>
+    <ClInclude Include="InputManagerBeta.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="data.dat" />
   </ItemGroup>
 </Project>

@@ -13,5 +13,18 @@
   "port": 53000,
   "UpdateThread": false,
   "InputMap": [
+	{
+		"action":"game_exit",
+		"inputs":[{
+			"type":"keyboard",
+			"key":22,
+			"status":"released",
+			"alt":false,
+			"shift":false,
+			"ctrl":false,
+			"window":false
+			}
+		]
+	}
   ]
 }

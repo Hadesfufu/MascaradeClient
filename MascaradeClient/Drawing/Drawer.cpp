@@ -13,6 +13,8 @@ Drawer::~Drawer()
 }
 
 void Drawer::draw(){
+	if (!m_Window->isOpen())
+		return;
 	updateAnims();
 	//updateParallax();
 	m_Window->clear(sf::Color(208, 244, 247));

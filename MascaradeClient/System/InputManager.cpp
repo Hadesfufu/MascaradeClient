@@ -115,7 +115,6 @@ namespace Input{
 		return loadDefaultKeyForAction(actionEventStr, m_usingJoystick);
 	}
 	bool Manager::setKeyForEvent(char *actionEventStr){
-
 		return true;
 	}
 
@@ -161,12 +160,15 @@ namespace Input{
 			defaultActions = m_defaultKey.emplace(action, std::map<std::string, Key>()).first;
 		}
 
-		for (auto& localisation : input.at("keyboard")) {
-			std::string layout = localisation.at("language");
-			Key linkedKey = keyboardKey(localisation);
-			auto paired = std::pair<std::string, Key>(layout, linkedKey);
-			defaultActions->second.insert(paired);
-		}
+		try
+		{
+			for (auto& localisation : input.at("keyboard")) {
+				std::string layout = localisation.at("language");
+				Key linkedKey = keyboardKey(localisation);
+				auto paired = std::pair<std::string, Key>(layout, linkedKey);
+				defaultActions->second.insert(paired);
+			}
+		}catch (...){}
 
 		nlohmann::json& defaultInput = input.at("default");
 		std::string type = defaultInput.at("type");
@@ -180,11 +182,12 @@ namespace Input{
 		}
 		else
 			GfxDbgAssert(false, "unexpected type for input");
-
-		nlohmann::json& defaultJoystick = input.at("defaultJoystick");
-		std::string codeJoystick = defaultJoystick.at("code");
-		auto pairedKeyJoystick = std::pair<std::string, Key>(INPUTMAP_DEFAULT_JOYSTICK_STR, joystickKey(defaultJoystick));
-		defaultActions->second.insert(pairedKeyJoystick);
+		try {
+			nlohmann::json& defaultJoystick = input.at("defaultJoystick");
+			std::string codeJoystick = defaultJoystick.at("code");
+			auto pairedKeyJoystick = std::pair<std::string, Key>(INPUTMAP_DEFAULT_JOYSTICK_STR, joystickKey(defaultJoystick));
+			defaultActions->second.insert(pairedKeyJoystick);
+		}catch(...){}
 
 		if (input.find("user") != input.end()) {
 			nlohmann::json& userDefault = input.at("user");
@@ -213,26 +216,26 @@ namespace Input{
 	}
 
 	Key Manager::keyboardKey(nlohmann::json& key) {
-		std::string keyCode = key.at("key");
+		int keyCode = key.at("key");
 		std::string status = key.at("status");
-		std::string isAlt = key.at("alt");
-		std::string isShift = key.at("shift");
-		std::string isCtrl = key.at("ctrl");
-		std::string isWindow = key.at("window");
+		bool isAlt = key.at("alt");
+		bool isShift = key.at("shift");
+		bool isCtrl = key.at("ctrl");
+		bool isWindow = key.at("window");
 
-		return Key::KeyForKeyboard((sf::Keyboard::Key)std::stoi(keyCode),
+		return Key::KeyForKeyboard((sf::Keyboard::Key)(keyCode),
 			statusForKey(status),
-			std::stoi(isAlt) == 1,
-			std::stoi(isShift) == 1,
-			std::stoi(isCtrl) == 1,
-			std::stoi(isWindow) == 1);
+			isAlt == 1,
+			isShift == 1,
+			isCtrl == 1,
+			isWindow == 1);
 	}
 	Key Manager::mouseKey(nlohmann::json& key) {
-		std::string keyCode = key.at("key");
+		int keyCode = key.at("key");
 		std::string status = key.at("status");
 
 		return Key::KeyForMouse(statusForKey(status),
-			(sf::Mouse::Button)std::stoi(keyCode));
+			(sf::Mouse::Button)(keyCode));
 	}
 	Key Manager::joystickKey(nlohmann::json& keyXml) {
 		return Key::ErrorKey();

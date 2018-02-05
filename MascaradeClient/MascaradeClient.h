@@ -15,6 +15,7 @@ public:
 
 	void launch();
 	void login(); 
+	void exit();
 private:
 
 	void loadWindow();

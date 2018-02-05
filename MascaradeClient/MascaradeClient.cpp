@@ -5,10 +5,13 @@
 #include "InputManager.h"
 #include "Updater.h"
 #include "Drawer.h"
+#include "NotificationManager.h"
 
 
 MascaradeClient::MascaradeClient()
 {
+	Drawer::I()->setWindow(&m_window);
+	NotificationManager::I()->AddObserver("game_exit", this, &MascaradeClient::exit);
 }
 
 
@@ -65,3 +68,7 @@ void MascaradeClient::loadWindow()
 	Drawer::I()->clear();
 }
 
+void MascaradeClient::exit()
+{
+	m_window.close();
+}
