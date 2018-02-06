@@ -25,6 +25,12 @@
     <Filter Include="Source Files\Drawing">
       <UniqueIdentifier>{3745555a-67b1-4ed1-afe2-ea843bd39d5e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\HUD">
+      <UniqueIdentifier>{1505da36-dbb0-487b-a92c-0af3a01c695b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\HUD">
+      <UniqueIdentifier>{b37d469e-32e3-4f15-a598-00fedde7168f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="System\FontHolder.cpp">
@@ -96,8 +102,26 @@
     <ClCompile Include="System\Data.cpp">
       <Filter>Source Files\System</Filter>
     </ClCompile>
-    <ClCompile Include="InputManagerBeta.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="HUD\HUDContainer.cpp">
+      <Filter>Source Files\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="HUD\HUDElement.cpp">
+      <Filter>Source Files\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="HUD\HUDInventory.cpp">
+      <Filter>Source Files\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="HUD\HUDManager.cpp">
+      <Filter>Source Files\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="HUD\HUDRectangle.cpp">
+      <Filter>Source Files\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="HUD\HUDSprite.cpp">
+      <Filter>Source Files\HUD</Filter>
+    </ClCompile>
+    <ClCompile Include="HUD\HUDText.cpp">
+      <Filter>Source Files\HUD</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -182,8 +206,26 @@
     <ClInclude Include="System\Data.h">
       <Filter>Header Files\System</Filter>
     </ClInclude>
-    <ClInclude Include="InputManagerBeta.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="HUD\HUDText.h">
+      <Filter>Header Files\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="HUD\HUDContainer.h">
+      <Filter>Header Files\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="HUD\HUDElement.h">
+      <Filter>Header Files\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="HUD\HUDInventory.h">
+      <Filter>Header Files\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="HUD\HUDManager.h">
+      <Filter>Header Files\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="HUD\HUDRectangle.h">
+      <Filter>Header Files\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="HUD\HUDSprite.h">
+      <Filter>Header Files\HUD</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -15,11 +15,9 @@
 #endif
 
 #include "Singleton.h"
-#include "AnimatedEntity.h"
 #include "FontHolder.h"
-#include "windowController.h"
 
-class LoadingScreen : public Singleton<LoadingScreen>, public WindowController
+class LoadingScreen : public Singleton<LoadingScreen>
 {
 	friend class Singleton<LoadingScreen>;
 public:

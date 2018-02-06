@@ -1,7 +1,7 @@
 #include "HUDSprite.h"
 namespace HUD
 {
-	Sprite::Sprite(Element* parent, pugi::xml_node& node) : Element(parent, node)
+	Sprite::Sprite(Element* parent, json& node) : Element(parent, node)
 	{
 		load(node);
 	}
@@ -10,45 +10,51 @@ namespace HUD
 		
 	}
 
-	void Sprite::load(pugi::xml_node& node)
+	void Sprite::load(json& node)
 	{
 		sf::IntRect rect;
-		pugi::xml_node childLoader;
+		json& childLoader = node;
 		sf::Color color;
 		sf::Texture* texture;
 		std::string string;
 		/////////////////
 		//Texture
 		/////////////////
-		if (childLoader = node.child("texture")) {
-			string = childLoader.first_attribute().as_string();
-			texture = TextureHolder::I()->getTexture(string);
-			if (!texture)
-				Log::error("HUDSprite") << string;
-			m_Sprite.setTexture(*texture);
+		try{
+		texture = TextureHolder::I()->getTexture(node.at("texture"));
+		if (!texture)
+			Log::error("HUDSprite") << string;
+		m_Sprite.setTexture(*texture);
 		}
+		catch (...) {}
 
 		/////////////////
 		//Texture Rect
 		/////////////////
-		if (childLoader = node.child("textureRect")) {
-			rect.left = childLoader.attribute("left").as_int();
-			rect.top = childLoader.attribute("top").as_int();
-			rect.width = childLoader.attribute("width").as_int();
-			rect.height = childLoader.attribute("height").as_int();
+		try {
+		if (childLoader = node.at("textureRect")) {
+			rect.left = childLoader.at("left");
+			rect.top = childLoader.at("top");
+			rect.width = childLoader.at("width");
+			rect.height = childLoader.at("height");
 			m_Sprite.setTextureRect(rect);
 		}
+		}
+		catch (...) {}
 
 		/////////////////
 		//Color
 		/////////////////
-		if (childLoader = node.child("color")) {
-			color.r = childLoader.attribute("r").as_int();
-			color.g = childLoader.attribute("g").as_int();
-			color.b = childLoader.attribute("b").as_int();
-			color.a = childLoader.attribute("a").as_int();
-			m_Sprite.setColor(color);
+		try {
+			if (childLoader = node.at("color")) {
+				color.r = childLoader.at("r");
+				color.g = childLoader.at("g");
+				color.b = childLoader.at("b");
+				color.a = childLoader.at("a");
+				m_Sprite.setColor(color);
+			}
 		}
+		catch (...) {}
 		m_Sprite.setOrigin(getOrigin());
 		m_Sprite.setPosition(getPosition());
 		setSize(sf::Vector2f(m_Sprite.getGlobalBounds().width, m_Sprite.getGlobalBounds().height));

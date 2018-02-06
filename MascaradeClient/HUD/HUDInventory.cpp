@@ -3,12 +3,12 @@
 namespace HUD
 {
 
-	Inventory::Inventory(Element* parent, pugi::xml_node& node) : Element(parent, node)
+	Inventory::Inventory(Element* parent, json& node) : Element(parent, node)
 	{
 		
 	}
 
-	void Inventory::load(pugi::xml_node& node)
+	void Inventory::load(json& node)
 	{
 		
 	}

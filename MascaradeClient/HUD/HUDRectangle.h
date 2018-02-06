@@ -6,14 +6,13 @@
 #ifndef HUDRectangle_H
 #define HUDRectangle_H
 #include <string>
-#include "zeraTeam_system.h"
 #include "HUDElement.h"
 
 namespace HUD {
 	class Rectangle : public Element
 	{
 	public:
-		Rectangle(Element *parent, pugi::xml_node& node);
+		Rectangle(Element *parent, json& node);
 		~Rectangle();
 
 		void setSize(const sf::Vector2f& vec);
@@ -22,11 +21,11 @@ namespace HUD {
 		void setScale(const sf::Vector2f& vec);
 		void setOrigin(const sf::Vector2f& vec);
 		
-		
-		void updateFromGame(NotificationManager::Dictionary dic);
+
+		virtual void updateFromGame(NotificationManager::Dictionary dic);
 		virtual void updateFromCamera();
 	private:
-		void load(pugi::xml_node& node);
+		void load(json& node);
 
 	private:
 		sf::RectangleShape m_shape;

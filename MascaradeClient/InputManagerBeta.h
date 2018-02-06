@@ -3,15 +3,15 @@
 #include "Singleton.h"
 #include <map>
 #include "Data.h"
-#include "j
-#include <SFML/Window/Keyboard.hpp>
+#include "json.hpp"
+#include <SFML/Graphics.hpp>
 
 namespace Input {
 
 	class Input
 	{
 	public:
-		Input();
+		Input(json& j) { load(j); };
 		~Input();
 
 		virtual void load(nlohmann::json& j)
@@ -25,7 +25,8 @@ namespace Input {
 
 	class KeyboardInput : public Input
 	{
-		KeyboardInput();
+	public: 
+		KeyboardInput(json& j) : Input(j) {};
 		~KeyboardInput();
 
 		void load(nlohmann::json& j)
@@ -39,42 +40,46 @@ namespace Input {
 	private: 
 		bool m_alt, m_shift, m_ctrl, m_windows;
 		sf::Keyboard::Key m_key;
+		sf::Event::EventType m_type;
 		int language; 
 	};
 
 	class MouseInput : public Input
 	{
-		MouseInput();
+		MouseInput(json& h) : Input(j) {};
 		~MouseInput();
 
 	private:
-		bool m_alt, m_shift, m_ctrl, m_windows;
-		sf::Keyboard::Key m_key;
+
+		sf::Mouse::Button m_key;
 	};
 
 	class ManagerBeta : public Singleton<ManagerBeta>
 	{
 		friend class Singleton<ManagerBeta>;
 	public:
-		ManagerBeta();
+		ManagerBeta() { load(); };
 		~ManagerBeta();
+
+		void addEventTrigger(sf::Event::EventType type, std::string& string) {
+			m_eventTrigger.emplace(type, string);
+		}
 
 		void load()
 		{
-			std::string type;
 			for(auto& actions: Data::json().at("InputMap"))
 			{
 				std::string action = actions.at("action");
 				for(auto& input: actions.at("inputs"))
 				{
-					type = input.at("type");
+					std::string type = input.at("type");
 					if (type == "keyboard")
 					{
-
+						m_keyboardinputs.emplace(KeyboardInput(input), action);
 					}
 					else if (type == "mouse")
 					{
-
+						m_mouseinputs.emplace(MouseInput(input), action);
 					}
 					else
 						Log::error("ManagerBeta-load") << "Input type not recognised";
@@ -83,8 +88,9 @@ namespace Input {
 		}
 	private: 
 
-		std::map<KeyboardInput, std::string> m_keyboardinputs;
-		std::map<MouseInput, std::string> m_mouseinputs;
+		std::map<sf::Event::EventType, std::string> m_eventTrigger; 
+		std::map<KeyboardInput, std::string>		m_keyboardinputs;
+		std::map<MouseInput, std::string>			m_mouseinputs;
 	};
 }
 

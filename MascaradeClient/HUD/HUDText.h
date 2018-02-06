@@ -6,17 +6,16 @@
 #ifndef HUDText_H
 #define HUDText_H
 #include <string>
-#include "zeraTeam_system.h"
 #include "HUDElement.h"
 
 namespace HUD {
 	class Text : public Element
 	{
 	public:
-		Text(Element* parent, pugi::xml_node& node);
+		Text(Element* parent, json& node);
 		~Text();
 
-		void load(pugi::xml_node& node);
+		void load(json& node);
 
 		virtual void	setRotation(float f);
 		virtual void	setScale(const sf::Vector2f& vec);

@@ -1,5 +1,4 @@
 #include "LoadingScreen.h"
-#include "Application.h"
 
 LoadingScreen::LoadingScreen():
 m_Continue(true),

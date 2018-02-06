@@ -14,10 +14,10 @@ namespace HUD {
 	{
 
 	public:
-		Inventory(Element* parent, pugi::xml_node& node);
+		Inventory(Element* parent, json& node);
 		~Inventory();
 
-		virtual void load(pugi::xml_node& node) = 0;
+		virtual void load(json& node) = 0;
 
 		virtual void setRotation(float f) = 0;
 		virtual void setScale(const sf::Vector2f& vec) = 0;

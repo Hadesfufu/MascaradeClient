@@ -2,7 +2,7 @@
 
 namespace HUD
 {
-	Rectangle::Rectangle(Element* parent, pugi::xml_node& node) : Element(parent, node)
+	Rectangle::Rectangle(Element* parent, json& node) : Element(parent, node)
 	{
 		load(node);
 	}
@@ -12,51 +12,52 @@ namespace HUD
 		
 	}
 	
-	void Rectangle::load(pugi::xml_node& node)
+	void Rectangle::load(json& node)
 	{
 		sf::Color color;
-		pugi::xml_node childLoader;
+		json& childLoader = node;
 		std::string s;
 		float f;
 		
 		/////////////////
 		//FillColor
 		/////////////////
-		if (childLoader = node.child("fillColor")) {
-			color.r = childLoader.attribute("r").as_int();
-			color.g = childLoader.attribute("g").as_int();
-			color.b = childLoader.attribute("b").as_int();
-			color.a = childLoader.attribute("a").as_int();
+		try{
+		if (childLoader = node.at("fillColor")) {
+			color.r = childLoader.at("r");
+			color.g = childLoader.at("g");
+			color.b = childLoader.at("b");
+			color.a = childLoader.at("a");
 			m_shape.setFillColor(color);
 		}
+		}
+		catch (...) {}
 
 		/////////////////
 		//OutlineColor
 		/////////////////
-		if (childLoader = node.child("outlineColor")) {
-			color.r = childLoader.attribute("r").as_int();
-			color.g = childLoader.attribute("g").as_int();
-			color.b = childLoader.attribute("b").as_int();
-			color.a = childLoader.attribute("a").as_int();
+		try {
+		if (childLoader = node.at("outlineColor")) {
+			color.r = childLoader.at("r");
+			color.g = childLoader.at("g");
+			color.b = childLoader.at("b");
+			color.a = childLoader.at("a");
 			m_shape.setOutlineColor(color);
 		}
+		}
+		catch (...) {}
 
 		/////////////////
 		//OutlineThickness
 		/////////////////
-		if (childLoader = node.child("outlineThickness")) {
-			f = childLoader.first_attribute().as_float();
-			m_shape.setOutlineThickness(f);
+		try {
+			if (childLoader = node.at("outlineThickness")) {
+				f = childLoader.at("Thickness");
+				m_shape.setOutlineThickness(f);
+			}
 		}
+		catch (...) {}
 
-		/////////////////
-		//Action
-		/////////////////
-		if(childLoader = node.child("action"))
-		{
-			s = childLoader.first_attribute().as_string();
-			NotificationManager::I()->AddObserver(s, this, &Rectangle::updateFromGame);			
-		}
 		m_shape.setSize(getSize());
 		m_shape.setOrigin(getOrigin());
 		m_shape.setPosition(getPosition());

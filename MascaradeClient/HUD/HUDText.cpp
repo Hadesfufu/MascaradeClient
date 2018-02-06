@@ -1,6 +1,6 @@
 #include "HUDText.h"
 namespace HUD {
-	HUD::Text::Text(Element* parent, pugi::xml_node& node) : Element(parent)
+	HUD::Text::Text(Element* parent, json& node) : Element(parent)
 	{
 		load(node);
 	}
@@ -10,106 +10,100 @@ namespace HUD {
 		NotificationManager::I()->RemoveObserver(this);
 	}
 
-	void HUD::Text::load(pugi::xml_node& node)
+	void HUD::Text::load(json& node)
 	{
 		sf::Color		color;
 		sf::Vector2f	vec;
 		float			f;
 		std::string		s;
-		pugi::xml_node childLoader;
-
+		json& childLoader = node;
+		
 		/////////////////
 		//FillColor
 		/////////////////
-		if (childLoader = node.child("fillColor")) {
-			color.r = childLoader.attribute("r").as_int();
-			color.g = childLoader.attribute("g").as_int();
-			color.b = childLoader.attribute("b").as_int();
-			color.a = childLoader.attribute("a").as_int(); 
-			m_text.setFillColor(color);
+		try {
+			if (childLoader = node.at("fillColor")) {
+				color.r = childLoader.at("r");
+				color.g = childLoader.at("g");
+				color.b = childLoader.at("b");
+				color.a = childLoader.at("a");
+				m_text.setFillColor(color);
+			}
 		}
+		catch (...) {}
 
 		/////////////////
 		//OutlineColor
 		/////////////////
-		if (childLoader = node.child("outlineColor")) {
-			color.r = childLoader.attribute("r").as_int();
-			color.g = childLoader.attribute("g").as_int();
-			color.b = childLoader.attribute("b").as_int();
-			color.a = childLoader.attribute("a").as_int();
-			m_text.setOutlineColor(color);
+		try {
+			if (childLoader = node.at("outlineColor")) {
+				color.r = childLoader.at("r");
+				color.g = childLoader.at("g");
+				color.b = childLoader.at("b");
+				color.a = childLoader.at("a");
+				m_text.setOutlineColor(color);
+			}
 		}
+		catch (...) {}
 
 		/////////////////
 		//OutlineThickness
 		/////////////////
-		if (childLoader = node.child("outlineThickness")) {
-			f = childLoader.first_attribute().as_float();
-			m_text.setOutlineThickness(f);
+		try {
+			m_text.setOutlineThickness(node.at("outlineThickness"));
 		}
+		catch (...) {}
 
 		/////////////////
 		//Font Size
 		/////////////////
-		if (childLoader = node.child("charSize"))
-		{
-			m_text.setCharacterSize(childLoader.first_attribute().as_uint());
+		try {
+			m_text.setCharacterSize(node.at("charSize"));
 		}
-	
+		catch (...) {}
+
 		/////////////////
 		//Font
 		/////////////////
-		if (childLoader = node.child("font"))
-		{
-			s = childLoader.first_attribute().as_string();
-			m_text.setFont(*FontHolder::I()->getFont(s));
+		try {
+			m_text.setFont(*FontHolder::I()->getFont(node.at("font")));
+
 		}
+		catch (...) {}
 
 		/////////////////
 		//String
 		/////////////////
-		if(childLoader = node.child("string"))
-		{
-			s = childLoader.first_attribute().as_string();
-			m_text.setString(s);
+		try {
+			m_text.setString(node.at("string"));
+
 		}
+		catch (...) {}
 
 		/////////////////
 		//Style
 		/////////////////
-		if (childLoader = node.child("style"))
-		{
-			int style = 0;
-			if (childLoader.attribute("bold").as_bool())
-				style += 1;
-			if (childLoader.attribute("italic").as_bool())
-				style += 2;
-			if (childLoader.attribute("underline").as_bool())
-				style += 4;
-			m_text.setStyle(style);
+		try {
+			if (childLoader = node.at("style"))
+			{
+				int style = 0;
+				if (childLoader.at("bold"))
+					style += 1;
+				if (childLoader.at("italic"))
+					style += 2;
+				if (childLoader.at("underline"))
+					style += 4;
+				m_text.setStyle(style);
+			}
 		}
+		catch (...) {}
 
-		/////////////////
-		//Action
-		/////////////////
-		if (childLoader = node.child("action"))
-		{
-			s = childLoader.first_attribute().as_string();
-			NotificationManager::I()->AddObserver(s, this, &Text::setViaNotif);
-		}
-		
 		setBounds(m_text.getGlobalBounds());
 		loadElement(node);
 		m_text.setPosition(getPosition());
 		m_text.setOrigin(getOrigin());
 
 		Drawer::I()->addToLayer("HUD", &m_text);
-	}
-
-	void Text::setViaNotif(NotificationManager::Dictionary d)
-	{
-		std::string s = *static_cast<std::string*>(d.m_dict["fps"]);
-		setText(s);
 	}
 
 	void Text::setRotation(float f)
@@ -121,7 +115,7 @@ namespace HUD {
 	{
 		m_text.setScale(vec);
 	}
-	
+
 	void Text::setText(std::string s)
 	{
 		m_text.setString(s);

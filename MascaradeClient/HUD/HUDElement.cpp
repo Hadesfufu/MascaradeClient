@@ -1,8 +1,7 @@
 #include "HUDElement.h"
-#include "Application.h"
 
 namespace HUD {
-	HUD::Element::Element(Element* parent, pugi::xml_node& node)
+	HUD::Element::Element(Element* parent, json& node)
 		: m_parent(parent),
 		m_Bounds(0, 0, 0, 0),
 		m_Origin(0, 0),
@@ -31,94 +30,125 @@ namespace HUD {
 	{
 	}
 
-	void Element::loadElement(pugi::xml_node& node)
+	void Element::loadElement(json& node)
 	{
 		sf::FloatRect	frect;
 		sf::Vector2f	vec;
-		pugi::xml_node	childLoader;
+		json&			childLoader = node;
 
 		/////////////////
 		//Margin
 		/////////////////
-		if (childLoader = node.child("margin")) {
-			frect.left = childLoader.attribute("left").as_float();
-			frect.top = childLoader.attribute("top").as_float();
-			frect.width = childLoader.attribute("width").as_float();
-			frect.height = childLoader.attribute("height").as_float();
-			setMargin(frect);
-		}
+		try {
+			if (childLoader = node.at("margin")) {
+				frect.left = childLoader.at("left");
+				frect.top = childLoader.at("top");
+				frect.width = childLoader.at("width");
+				frect.height = childLoader.at("height");
+				setMargin(frect);
+			}
+		}catch(...){}
 
 		/////////////////
 		//Padding
 		/////////////////
-		if (childLoader = node.child("padding")) {
-			frect.left = childLoader.attribute("left").as_float();
-			frect.top = childLoader.attribute("top").as_float();
-			frect.width = childLoader.attribute("width").as_float();
-			frect.height = childLoader.attribute("height").as_float();
+		try {
+		if (childLoader = node.at("padding")) {
+			frect.left = childLoader.at("left");
+			frect.top = childLoader.at("top");
+			frect.width = childLoader.at("width");
+			frect.height = childLoader.at("height");
 			setPadding(frect);
 		}
+		}
+		catch (...) {}
 		
 		/////////////////
 		//Origin
 		/////////////////
-		if (childLoader = node.child("origin")) {
-			vec.x = childLoader.attribute("x").as_float();
-			vec.y = childLoader.attribute("y").as_float();
+		try {
+		if (childLoader = node.at("origin")) {
+			vec.x = childLoader.at("x");
+			vec.y = childLoader.at("y");
 			setOrigin(vec);
 		}
+		}
+		catch (...) {}
 
 		/////////////////
 		//Position
 		/////////////////
 		vec.x = 0; vec.y = 0;
-		if (childLoader = node.child("position")) {
-			vec.x = childLoader.attribute("x").as_float();
-			vec.y = childLoader.attribute("y").as_float();
+		try {
+		if (childLoader = node.at("position")) {
+			vec.x = childLoader.at("x");
+			vec.y = childLoader.at("y");
 		}
+		}catch (...) {}
 		setPosition(vec);
 
 
 		/////////////////
 		//Size
 		/////////////////
-		if (childLoader = node.child("size")) {
-			vec.x = childLoader.attribute("x").as_float();
-			vec.y = childLoader.attribute("y").as_float();
+		try {
+		if (childLoader = node.at("size")) {
+			vec.x = childLoader.at("x");
+			vec.y = childLoader.at("y");
 			setSize(vec);
 		}
+		}
+		catch (...) {}
 
 		/////////////////
 		//SizePercent
 		/////////////////
-		if (childLoader = node.child("sizePercent")) {
-			vec.x = childLoader.attribute("x").as_float();
-			vec.y = childLoader.attribute("y").as_float();
+		try {
+		if (childLoader = node.at("sizePercent")) {
+			vec.x = childLoader.at("x");
+			vec.y = childLoader.at("y");
 			setSizePercent(vec);
 		}
+		}
+		catch (...) {}
 
 		/////////////////
 		//FloatRight
 		/////////////////
-		if (childLoader = node.child("floatRight")) {
+		try {
+		if (childLoader = node.at("floatRight")) {
 			setFloatRight();
 		}
+		}
+		catch (...) {}
 		
 		/////////////////
 		//FloatRight
 		/////////////////
-		if (childLoader = node.child("floatBot")) {
+		try {
+		if (childLoader = node.at("floatBot")) {
 			setFloatBot();
 		}
+		}
+		catch (...) {}
 		/////////////////
 		//PositionPercent
 		/////////////////
-		if (childLoader = node.child("positionPercent")) {
-			vec.x = childLoader.attribute("x").as_float();
-			vec.y = childLoader.attribute("y").as_float();
+		try {
+		if (childLoader = node.at("positionPercent")) {
+			vec.x = childLoader.at("x");
+			vec.y = childLoader.at("y");
 			setPositionPercent(vec);
 		}
+		}
+		catch (...) {}
 
+		/////////////////
+		//Action
+		/////////////////
+		try {
+			NotificationManager::I()->AddObserver(node.at("action"), this, &Element::updateFromGame);
+		}catch(...){}
 	}
 
 
@@ -248,4 +278,9 @@ namespace HUD {
 		m_Bounds.left += vec.x;
 		m_Bounds.top += vec.y;
 	}
+	
+	void Element::updateFromGame(NotificationManager::Dictionary dic) {
+
+	}
+
 }

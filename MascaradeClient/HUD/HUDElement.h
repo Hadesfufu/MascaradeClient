@@ -7,16 +7,19 @@
 #define HUDElement_H
 #include <string>
 #include "Drawer.h"
-#include "zeraTeam_system.h"
+#include "NotificationManager.h"
+#include "TextureHolder.h"
+#include "FontHolder.h"
+
 namespace HUD {
 	class Element
 	{
 	public:
-		Element(Element* parent, pugi::xml_node& node);
+		Element(Element* parent, json& node);
 		Element(Element* parent);
 		~Element();
 
-		virtual void load(pugi::xml_node& node) = 0;
+		virtual void load(json& node) = 0;
 
 		virtual	void setSize(const sf::Vector2f& vec);
 		virtual void setPosition(const sf::Vector2f& vec);
@@ -45,7 +48,8 @@ namespace HUD {
 
 		virtual void setPadding(sf::FloatRect& padding) { m_Padding = padding; };
 		virtual void setMargin(sf::FloatRect& margin);
-		
+
+		virtual void updateFromGame(NotificationManager::Dictionary dic);
 		virtual void updateFromCamera();
 
 		sf::Vector2f	getSize() { return sf::Vector2f(m_Bounds.width, m_Bounds.height); }
@@ -57,7 +61,7 @@ namespace HUD {
 		sf::FloatRect	getAvailableArea();
 	protected:
 
-		void loadElement(pugi::xml_node& node);
+		void loadElement(json& node);
 
 	private:
 

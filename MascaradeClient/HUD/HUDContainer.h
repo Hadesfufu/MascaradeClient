@@ -6,13 +6,12 @@
 #ifndef HUDContainer_H
 #define HUDContainer_H
 #include <string>
-#include "zeraTeam_system.h"
 #include "HUDElement.h"
 namespace HUD {
 	class Container : public Element
 	{
 	public:
-		Container(Element *parent, pugi::xml_node& node);
+		Container(Element *parent, json& node);
 		~Container();
 
 		void setSize(const sf::Vector2f& vec);
@@ -24,7 +23,7 @@ namespace HUD {
 
 		void updateFromCamera();
 	private:
-		void load(pugi::xml_node& node);
+		void load(json& node);
 
 	private:
 		std::vector<std::shared_ptr<Element>> m_Elements;

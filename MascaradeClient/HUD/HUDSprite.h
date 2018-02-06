@@ -6,13 +6,12 @@
 #ifndef HUDSprite_H
 #define HUDSprite_H
 #include <string>
-#include "zeraTeam_system.h"
 #include "HUDElement.h"
 namespace HUD {
 	class Sprite : public Element
 	{
 	public:
-		Sprite(Element *parent, pugi::xml_node& node);
+		Sprite(Element *parent, json& node);
 		~Sprite();
 
 		void setSize(const sf::Vector2f& vec);
@@ -23,7 +22,7 @@ namespace HUD {
 
 		virtual void updateFromCamera();
 	private:
-		void load(pugi::xml_node& node);
+		void load(json& node);
 
 	private:
 		sf::Sprite	m_Sprite;

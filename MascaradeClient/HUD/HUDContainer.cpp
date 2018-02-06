@@ -1,12 +1,11 @@
 #include "HUDContainer.h"
-#include "Entity.h"
 #include "HUDRectangle.h"
 #include "HUDText.h"
 #include "HUDSprite.h"
 
 namespace HUD {
 
-	Container::Container(Element* parent, pugi::xml_node& node) : Element(parent, node)
+	Container::Container(Element* parent, json& node) : Element(parent, node)
 	{
 		load(node);
 	}
@@ -16,10 +15,8 @@ namespace HUD {
 		m_Elements.clear();
 	}
 	
-	void Container::load(pugi::xml_node& node)
+	void Container::load(json& node)
 	{
-		pugi::xml_node child = node.first_child();
-		std::string childname;
 		m_Outline.setSize(getSize());
 		m_Outline.setPosition(0, 0);
 		m_Outline.setFillColor(sf::Color::Transparent);
@@ -27,17 +24,16 @@ namespace HUD {
 		m_Outline.setOutlineThickness(2.f);
 		Drawer::I()->addToLayer("HUD", &m_Outline);
 		setOutline(false);
-		while (child)
-		{
-			childname = child.name();
+		for (auto& child : node) {
+			std::string childname = child.at("type");
 			if (childname == "Container")
 			{
 				m_Elements.emplace_back(new Container(this, child));
-			}	
-			else if(childname == "Rectangle")
+			}
+			else if (childname == "Rectangle")
 			{
 				m_Elements.emplace_back(new Rectangle(this, child));
-			}	
+			}
 			else if (childname == "Text")
 			{
 				m_Elements.emplace_back(new Text(this, child));
@@ -50,7 +46,6 @@ namespace HUD {
 			{
 				setOutline(true);
 			}
-			child = child.next_sibling();
 		}
 		Log::debug("HUDContainer") << "Container Loaded. Elements : " << m_Elements.size();
 	}
