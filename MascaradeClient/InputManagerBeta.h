@@ -12,26 +12,49 @@ namespace Input {
 	class Key {
 	public:
 		Key() {}
+		~Key() {}
 		Key(sf::Keyboard::Key k) { m_keyboard = k; }
 		Key(sf::Mouse::Button b) { m_mouse = b; }
 		Key(sf::Event::EventType b) { m_event = b; }
+		Key(json& j) { load(j); }
 
-		void setKeyboardKey(sf::Keyboard::Key k) { m_keyboard = k; }
-		void setMouseButton(sf::Mouse::Button b) { m_mouse = b; }
-		void setEventType(sf::Event::EventType e) { m_event = e; }
+		void setKeyboardKey(sf::Keyboard::Key& k) { m_keyboard = k; }
+		void setMouseButton(sf::Mouse::Button& b) { m_mouse = b; }
+		void setEventType(sf::Event::EventType& e) { m_event = e; }
 
 		void load(json& j) {
-			
+			try {
+				std::string type = j.at("type");
+				if (type == "keyboard") {
+					try {
+						m_keyboard = sf::Keyboard::Key(j.at("key"));
+					}
+					catch (...) { Log::error("Key::load") << "keyboard key not found"; }
+				}
+				else if (type == "keyboard") {
+					try {
+						m_mouse = sf::Mouse::Button(j.at("key"));
+					}
+					catch (...) { Log::error("Key::load") << "mouse key not found"; }
+				}
+				else if (type == "event") {
+					try {
+						m_event = sf::Event::EventType(j.at("key"));
+					}
+					catch (...) { Log::error("Key::load") << "event key not found"; }
+				}
+			}
+			catch (...) {}
 		}
 
-		bool compare(sf::Keyboard::Key k) { return (k == m_keyboard); }
-		bool compate(sf::Mouse::Button b) { return (b == m_mouse); }
-		bool compate(sf::Event::EventType e) { return (e == m_event); }
+		bool compare(sf::Keyboard::Key k) const { return (k == m_keyboard); }
+		bool compate(sf::Mouse::Button b) const { return (b == m_mouse); }
+		bool compate(sf::Event::EventType e) const { return (e == m_event); }
 
 	private:
 		sf::Keyboard::Key m_keyboard = sf::Keyboard::Unknown;
 		sf::Mouse::Button m_mouse = sf::Mouse::Button::ButtonCount;
-		sf::Event::EventType m_event = sf::Event::Count; 
+		sf::Event::EventType m_event = sf::Event::Count;
 	};
 
 	class Input
@@ -42,73 +65,110 @@ namespace Input {
 
 		virtual void load(nlohmann::json& j)
 		{
-			m_status = j.at("status");
-			m_action = j.at("action");
+			m_status = j.at("status").get<std::string>();
+			m_action = j.at("action").get<std::string>();
+			m_key.load(j);
 		};
 
 		Key getKey() { return m_key; }
 
+		void enable(bool b) { m_enabled = b; }
+
+		bool checkInput(sf::Event e) {
+
+		}
+
 	private:
-		std::string m_status;
-		std::string m_action;
-		Key			m_key;
-		bool enabled = true; 
+		std::string				m_action;
+		sf::Event::EventType	m_status; 
+		Key						m_key;
+		bool					m_enabled = true;
 	};
 
 	class KeyboardInput : public Input
 	{
-	public: 
+	public:
 		KeyboardInput(json& j) : Input(j) {};
 		~KeyboardInput();
 
 		void load(nlohmann::json& j)
 		{
+			Input::load(j);
 			m_alt = j.at("alt");
 			m_shift = j.at("shift");
 			m_ctrl = j.at("ctrl");
 			m_windows = j.at("windows");
 		}
-		
-	private: 
+
+	private:
 		bool m_alt, m_shift, m_ctrl, m_windows;
-		sf::Event::EventType m_type;
-		int language; 
+		int language;
 	};
 
 	class MouseInput : public Input
 	{
-	public: 
-		MouseInput(json& j) : Input(j) {};
-		~MouseInput();
+	public:
+		MouseInput(json& j) : Input(j) {}
+		~MouseInput() {}
+
+		void load(json& j) {
+			Input::load(j);
+		}
 
 	private:
-
+		
 	};
 
 	class ManagerBeta : public Singleton<ManagerBeta>
 	{
 		friend class Singleton<ManagerBeta>;
 	public:
-		ManagerBeta() { load(); };
-		~ManagerBeta() {};
+		ManagerBeta() { load(); }
+		~ManagerBeta() {
+			for (auto it = m_events.begin(); it != m_events.end(); ++it) {
+				delete (*it).first;
+			}
+			m_events.clear();
+		}
 
 		void addEventTrigger(sf::Event::EventType type, std::string& string) {
-			m_eventTrigger.emplace(type, string);
+			m_events.emplace(new Key(type), string);
+		}
+
+		void handleEvent(sf::Event& event) {
+			for (auto it = m_events.begin(); it != m_events.end(); ++it) {
+				if ((*it).first->compate(event.type)) {
+
+				}
+				else if (event.type == sf::Event::KeyPressed) {
+
+				}
+			}
 		}
 
 		void load()
 		{
-			for(auto& actions: Data::json().at("InputMap"))
+			std::string type;
+			std::string action;
+			Input* inputptr;
+			for (auto& actions : Data::json().at("InputMap"))
 			{
-				std::string action = actions.at("action");
-				for(auto& input: actions.at("inputs"))
+				action = actions.at("action").get<std::string>();
+				for (auto& input : actions.at("inputs"))
 				{
-					m_events.emplace(Key(input), action);
+					type = actions.at("type").get<std::string>();
+					if (type == "keyboard") {
+						inputptr = new KeyboardInput(input);
+					}
+					else if (type == "mouse") {
+						inputptr = new MouseInput(input);
+					}
+					m_events.emplace(new Key(input), inputptr);
 				}
 			}
 		}
-	private: 
-		std::multimap<Key, std::string>					m_events;
+	private:
+		std::multimap<Key*, Input*>					m_events;
 	};
 }
 

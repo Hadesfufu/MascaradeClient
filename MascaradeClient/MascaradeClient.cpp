@@ -25,9 +25,9 @@ void MascaradeClient::launch()
 	loadWindow();
 	while (m_window.isOpen()) {
 		sf::Event e;
-		while (m_window.pollEvent(e))
+		/*while (m_window.pollEvent(e))
 			Input::Manager::I()->handelInputEvent(e);
-		Input::Manager::I()->notifyClickingAction();
+		Input::Manager::I()->notifyClickingAction();*/
 		
 		Updater::I()->onUpdate();
 		Drawer::I()->draw();
