@@ -20,36 +20,36 @@
 #define INPUTMAP_DEFAULT_JOYSTICK_STR		"inputDefaultJoystick"
 #define INPUTMAP_DEFAULT_KEY_STR			"inputDefaultKeyboardKey"
 
-namespace Input{
+namespace Input {
 	Manager::Manager() :
 		m_usingJoystick(false)
 	{
-		if (loadInput()){
+		if (loadInput()) {
 			Log::info("InputManager") << "-------	InputMap loaded		------\n";
 		}
-		else{
+		else {
 			Log::error("InputManager") << "-------	InputMap loading error		------\n";
 			GfxDbgAssert(false, "error while loading InputMap");
 		}
 	}
 	Manager::~Manager()
 	{
-	
+
 	}
 
-	bool Manager::handelInputEvent(sf::Event windowEvent){
-		switch (windowEvent.type){
+	bool Manager::handelInputEvent(sf::Event windowEvent) {
+		switch (windowEvent.type) {
 		case sf::Event::Closed:
 			NotificationManager::I()->PostNotification(NOTIFICATION_NAME_CLOSING_EVENT);
 			break;
-		case sf::Event::Resized:{
+		case sf::Event::Resized: {
 			NotificationManager::I()->PostNotification(NOTIFICATION_NAME_RESIZE_EVENT);
 			break;
 		}
-		case sf::Event::LostFocus:{
+		case sf::Event::LostFocus: {
 			break;
 		}
-		case sf::Event::GainedFocus:{
+		case sf::Event::GainedFocus: {
 			break;
 		}
 		case sf::Event::KeyPressed:
@@ -74,7 +74,7 @@ namespace Input{
 			break;
 		case sf::Event::TextEntered:
 			//	useless event
-				break;
+			break;
 		default:
 			Log::warning("InputMaanger") << "error invalide event to handle";
 			return false;
@@ -84,11 +84,11 @@ namespace Input{
 		return true;
 	}
 
-	bool Manager::notifyClickingAction(){
-		for (auto it = m_pressedCtimeForActions.begin(); it != m_pressedCtimeForActions.end(); it++){
+	bool Manager::notifyClickingAction() {
+		for (auto it = m_pressedCtimeForActions.begin(); it != m_pressedCtimeForActions.end(); it++) {
 			TimerForKey timer = it->second;
 			sf::Time clickingTime = timer.m_clock.getElapsedTime();
-			if (clickingTime.asSeconds() >= INTERVAL_CLICKING_SECOND){
+			if (clickingTime.asSeconds() >= INTERVAL_CLICKING_SECOND) {
 				timer.m_clock.restart();
 				timer.m_duration += clickingTime;
 				NotificationManager::Dictionary userInfo;
@@ -101,36 +101,36 @@ namespace Input{
 		return true;
 	}
 
-	const std::list<Key> Manager::getKeyForAction(char *actionEventStr) const{
+	const std::list<Key> Manager::getKeyForAction(char *actionEventStr) const {
 		return m_keyboardActions.keyForSecondKey(actionEventStr);
 	}
 
-	bool Manager::resetKeyForEvent(char *actionEventStr, Key currentKey){
+	bool Manager::resetKeyForEvent(char *actionEventStr, Key currentKey) {
 		bool linked = m_keyboardActions.unlink(currentKey, actionEventStr);
-		if (!linked){
+		if (!linked) {
 			Log::error("InputManager") << "can not reset key, wrong old kay to unbind set";
 			return false;
 		}
 
 		return loadDefaultKeyForAction(actionEventStr, m_usingJoystick);
 	}
-	bool Manager::setKeyForEvent(char *actionEventStr){
+	bool Manager::setKeyForEvent(char *actionEventStr) {
 		return true;
 	}
 
-	bool Manager::loadDefaultKeyForAction(std::string actionStr, bool joystick){
+	bool Manager::loadDefaultKeyForAction(std::string actionStr, bool joystick) {
 		auto elem = m_defaultKey.find(actionStr);
-		if (elem == m_defaultKey.end()){
+		if (elem == m_defaultKey.end()) {
 			Log::error("inputManager") << "error : no default key for action " << actionStr;
 			return false;
 		}
 
 		auto inputs = elem->second;
 		std::map<std::string, Key>::iterator input;
-		if (joystick){
+		if (joystick) {
 			input = inputs.find(INPUTMAP_DEFAULT_JOYSTICK_STR);
 		}
-		else{
+		else {
 			char keyboardLayoutName[KL_NAMELENGTH];
 			keyboardLayoutName[0] = 0;
 			GetKeyboardLayoutName(charToLPWSTR(keyboardLayoutName));
@@ -145,7 +145,7 @@ namespace Input{
 		return m_keyboardActions.link(input->second, actionStr);
 	}
 
-	bool Manager::loadInput(){
+	bool Manager::loadInput() {
 		nlohmann::json& inputs = Data::json().at("InputMap");
 		for (nlohmann::json& input : inputs) {
 			loadAction(input);
@@ -153,66 +153,83 @@ namespace Input{
 		return true;
 	}
 
-	void Manager::loadAction(nlohmann::json& input){
-		std::string action = input.at("action");
-		auto defaultActions = m_defaultKey.find(action);
-		if (defaultActions == m_defaultKey.end()){
-			defaultActions = m_defaultKey.emplace(action, std::map<std::string, Key>()).first;
+	void Manager::loadAction(nlohmann::json& action) {
+		std::string action_str = action.at("action");
+		json& inputs = action.at("inputs");
+		auto defaultActions = m_defaultKey.find(action_str);
+		if (defaultActions == m_defaultKey.end()) {
+			defaultActions = m_defaultKey.emplace(action_str, std::map<std::string, Key>()).first;
 		}
 
 		try
 		{
-			for (auto& localisation : input.at("keyboard")) {
-				std::string layout = localisation.at("language");
-				Key linkedKey = keyboardKey(localisation);
-				auto paired = std::pair<std::string, Key>(layout, linkedKey);
-				defaultActions->second.insert(paired);
+			for (auto& input : inputs) {
+				std::string inputType = input.at("inputType");
+				if (inputType == "keyboard") {
+					std::string layout = input.at("language");
+					Key linkedKey = keyboardKey(input);
+					auto paired = std::pair<std::string, Key>(layout, linkedKey);
+					defaultActions->second.insert(paired);
+				}
+				else if (inputType == "default") {
+					std::string type = input.at("type");
+					if (type == "mouse") {
+						auto pairedKey = std::pair<std::string, Key>(INPUTMAP_DEFAULT_KEY_STR, mouseKey(input));
+						defaultActions->second.insert(pairedKey);
+					}
+					else if (type == "keyboard") {
+						auto pairedKey = std::pair<std::string, Key>(INPUTMAP_DEFAULT_KEY_STR, keyboardKey(input));
+						defaultActions->second.insert(pairedKey);
+					}
+					/*else {
+						GfxDbgAssert(false, "unexpected type for input");
+						nlohmann::json& defaultJoystick = inputs.at("defaultJoystick");
+						std::string codeJoystick = defaultJoystick.at("code");
+						auto pairedKeyJoystick = std::pair<std::string, Key>(INPUTMAP_DEFAULT_JOYSTICK_STR, joystickKey(defaultJoystick));
+						defaultActions->second.insert(pairedKeyJoystick);
+					}*/
+				}
+				else if (inputType == "user") {
+					std::string type = input.at("type");
+					if (type == "mouse") {
+						Key key = mouseKey(input);
+						m_keyboardActions.link(key, action_str);
+					}
+					else if (type == "keyboard") {
+						Key key = keyboardKey(input);
+						m_keyboardActions.link(key, action_str);
+					}
+					else
+						GfxDbgAssert(false, "unexpected type for input");
+				}
 			}
-		}catch (...){}
-
-		nlohmann::json& defaultInput = input.at("default");
-		std::string type = defaultInput.at("type");
-		if (type == "mouse") {
-			auto pairedKey = std::pair<std::string, Key>(INPUTMAP_DEFAULT_KEY_STR, mouseKey(defaultInput));
-			defaultActions->second.insert(pairedKey);
 		}
-		else if (type == "keyboard") {
-			auto pairedKey = std::pair<std::string, Key>(INPUTMAP_DEFAULT_KEY_STR, keyboardKey(defaultInput));
-			defaultActions->second.insert(pairedKey);
-		}
-		else
-			GfxDbgAssert(false, "unexpected type for input");
-		try {
-			nlohmann::json& defaultJoystick = input.at("defaultJoystick");
-			std::string codeJoystick = defaultJoystick.at("code");
-			auto pairedKeyJoystick = std::pair<std::string, Key>(INPUTMAP_DEFAULT_JOYSTICK_STR, joystickKey(defaultJoystick));
-			defaultActions->second.insert(pairedKeyJoystick);
-		}catch(...){}
+		catch (...) {}
 
-		if (input.find("user") != input.end()) {
-			nlohmann::json& userDefault = input.at("user");
+		if (inputs.find("user") != inputs.end()) {
+			nlohmann::json& userDefault = inputs.at("user");
 			std::string type = userDefault.at("type");
 			if (type == "mouse") {
 				Key key = mouseKey(userDefault);
-				m_keyboardActions.link(key, action);
+				m_keyboardActions.link(key, action_str);
 			}
 			else if (type == "keyboard") {
 				Key key = keyboardKey(userDefault);
-				m_keyboardActions.link(key, action);
+				m_keyboardActions.link(key, action_str);
 			}
 			else
 				GfxDbgAssert(false, "unexpected type for input");
 		}
 		else
-			loadDefaultKeyForAction(action, false);
+			loadDefaultKeyForAction(action_str, false);
 
-		if (input.find("userJoystick") != input.end()){
-			nlohmann::json& userJoystick = input.at("userJoystick");
+		if (inputs.find("userJoystick") != inputs.end()) {
+			nlohmann::json& userJoystick = inputs.at("userJoystick");
 			Key userKey = joystickKey(userJoystick);
-			m_keyboardActions.link(userKey, action);
+			m_keyboardActions.link(userKey, action_str);
 		}
-		else 
-			loadDefaultKeyForAction(action, true);
+		else
+			loadDefaultKeyForAction(action_str, true);
 	}
 
 	Key Manager::keyboardKey(nlohmann::json& key) {
@@ -258,12 +275,12 @@ namespace Input{
 		return EKeyStatus_None;
 	}
 
-	bool Manager::handleKeyboardEvent(sf::Event &keyboardEvent){
-		switch (keyboardEvent.type){
-		case sf::Event::KeyPressed:{
+	bool Manager::handleKeyboardEvent(sf::Event &keyboardEvent) {
+		switch (keyboardEvent.type) {
+		case sf::Event::KeyPressed: {
 			Key key = Key::KeyForKeyboard(keyboardEvent.key.code, Input::EKeyStatus_Pressed, keyboardEvent.key.alt, keyboardEvent.key.shift, keyboardEvent.key.control, keyboardEvent.key.system);
 			std::list<std::string> actions = m_keyboardActions.keyForFirstKey(key);
-			for (auto it = actions.begin(); it != actions.end(); it++){
+			for (auto it = actions.begin(); it != actions.end(); it++) {
 				std::string actionName = *it;
 				auto it2 = m_pressedCtimeForActions.find(actionName);
 				if (it2 == m_pressedCtimeForActions.end())
@@ -272,10 +289,10 @@ namespace Input{
 
 			key = Key::KeyForKeyboard(keyboardEvent.key.code, Input::EKeyStatus_Pressing, keyboardEvent.key.alt, keyboardEvent.key.shift, keyboardEvent.key.control, keyboardEvent.key.system);
 			actions = m_keyboardActions.keyForFirstKey(key);
-			for (auto it = actions.begin(); it != actions.end(); it++){
+			for (auto it = actions.begin(); it != actions.end(); it++) {
 				std::string actionName = *it;
 				auto it2 = m_pressedCtimeForActions.find(actionName);
-				if (it2 == m_pressedCtimeForActions.end()){
+				if (it2 == m_pressedCtimeForActions.end()) {
 					TimerForKey timer;
 					timer.m_clock = sf::Clock();
 					timer.m_duration = sf::Time::Zero;
@@ -286,10 +303,10 @@ namespace Input{
 
 			return true;
 		}
-		case sf::Event::KeyReleased:{
+		case sf::Event::KeyReleased: {
 			Key key = Key::KeyForKeyboard(keyboardEvent.key.code, Input::EKeyStatus_Pressing, keyboardEvent.key.alt, keyboardEvent.key.shift, keyboardEvent.key.control, keyboardEvent.key.system);
 			std::list<std::string> actions = m_keyboardActions.keyForFirstKey(key);
-			for (auto it = actions.begin(); it != actions.end(); it++){
+			for (auto it = actions.begin(); it != actions.end(); it++) {
 				auto it2 = m_pressedCtimeForActions.find(*it);
 				if (it2 != m_pressedCtimeForActions.end())
 					m_pressedCtimeForActions.erase(it2);
@@ -297,7 +314,7 @@ namespace Input{
 
 			key = Key::KeyForKeyboard(keyboardEvent.key.code, Input::EKeyStatus_Release, keyboardEvent.key.alt, keyboardEvent.key.shift, keyboardEvent.key.control, keyboardEvent.key.system);
 			actions = m_keyboardActions.keyForFirstKey(key);
-			for (auto it = actions.begin(); it != actions.end(); it++){
+			for (auto it = actions.begin(); it != actions.end(); it++) {
 				std::string actionName = *it;
 				auto it2 = m_pressedCtimeForActions.find(actionName);
 				if (it2 == m_pressedCtimeForActions.end())
@@ -312,12 +329,12 @@ namespace Input{
 
 		return true;
 	}
-	bool Manager::handleMouseEvent(sf::Event &mouseEvent){
-		switch (mouseEvent.type){
-		case sf::Event::MouseButtonPressed:{
+	bool Manager::handleMouseEvent(sf::Event &mouseEvent) {
+		switch (mouseEvent.type) {
+		case sf::Event::MouseButtonPressed: {
 			Key key = Key::KeyForMouse(Input::EKeyStatus_Pressed, mouseEvent.mouseButton.button);
 			std::list<std::string> actions = m_keyboardActions.keyForFirstKey(key);
-			for (auto it = actions.begin(); it != actions.end(); it++){
+			for (auto it = actions.begin(); it != actions.end(); it++) {
 				std::string actionName = *it;
 				auto it2 = m_pressedCtimeForActions.find(actionName);
 				if (it2 == m_pressedCtimeForActions.end())
@@ -326,10 +343,10 @@ namespace Input{
 
 			key = Key::KeyForMouse(Input::EKeyStatus_Pressing, mouseEvent.mouseButton.button);
 			actions = m_keyboardActions.keyForFirstKey(key);
-			for (auto it = actions.begin(); it != actions.end(); it++){
+			for (auto it = actions.begin(); it != actions.end(); it++) {
 				std::string actionName = *it;
 				auto it2 = m_pressedCtimeForActions.find(actionName);
-				if (it2 == m_pressedCtimeForActions.end()){
+				if (it2 == m_pressedCtimeForActions.end()) {
 					TimerForKey timer;
 					timer.m_clock = sf::Clock();
 					timer.m_duration = sf::Time::Zero;
@@ -340,10 +357,10 @@ namespace Input{
 
 			return true;
 		}
-		case sf::Event::MouseButtonReleased:{
+		case sf::Event::MouseButtonReleased: {
 			Key key = Key::KeyForMouse(Input::EKeyStatus_Pressing, mouseEvent.mouseButton.button);
 			std::list<std::string> actions = m_keyboardActions.keyForFirstKey(key);
-			for (auto it = actions.begin(); it != actions.end(); it++){
+			for (auto it = actions.begin(); it != actions.end(); it++) {
 				auto it2 = m_pressedCtimeForActions.find(*it);
 				if (it2 != m_pressedCtimeForActions.end())
 					m_pressedCtimeForActions.erase(it2);
@@ -351,7 +368,7 @@ namespace Input{
 
 			key = Key::KeyForMouse(Input::EKeyStatus_Release, mouseEvent.mouseButton.button);
 			actions = m_keyboardActions.keyForFirstKey(key);
-			for (auto it = actions.begin(); it != actions.end(); it++){
+			for (auto it = actions.begin(); it != actions.end(); it++) {
 				std::string actionName = *it;
 				auto it2 = m_pressedCtimeForActions.find(actionName);
 				if (it2 == m_pressedCtimeForActions.end())
@@ -364,7 +381,7 @@ namespace Input{
 			break;
 		case sf::Event::MouseLeft:
 			break;
-		case sf::Event::MouseMoved:{
+		case sf::Event::MouseMoved: {
 			m_mousePos.x = mouseEvent.mouseMove.x;
 			m_mousePos.y = mouseEvent.mouseMove.y;
 			NotificationManager::Dictionary userInfo;

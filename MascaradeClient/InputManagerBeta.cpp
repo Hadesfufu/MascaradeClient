@@ -1,12 +1,3 @@
 #include "InputManagerBeta.h"
-
-
-
-InputManagerBeta::InputManagerBeta()
-{
-}
-
-
-InputManagerBeta::~InputManagerBeta()
-{
+namespace Input {
 }

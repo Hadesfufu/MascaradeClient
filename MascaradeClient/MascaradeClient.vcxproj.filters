@@ -36,12 +36,6 @@
     <ClCompile Include="System\FontHolder.cpp">
       <Filter>Source Files\System</Filter>
     </ClCompile>
-    <ClCompile Include="System\InputKey.cpp">
-      <Filter>Source Files\System</Filter>
-    </ClCompile>
-    <ClCompile Include="System\InputManager.cpp">
-      <Filter>Source Files\System</Filter>
-    </ClCompile>
     <ClCompile Include="System\MusicManager.cpp">
       <Filter>Source Files\System</Filter>
     </ClCompile>
@@ -123,15 +117,12 @@
     <ClCompile Include="HUD\HUDText.cpp">
       <Filter>Source Files\HUD</Filter>
     </ClCompile>
+    <ClCompile Include="InputManagerBeta.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="System\FontHolder.h">
-      <Filter>Header Files\System</Filter>
-    </ClInclude>
-    <ClInclude Include="System\InputKey.h">
-      <Filter>Header Files\System</Filter>
-    </ClInclude>
-    <ClInclude Include="System\InputManager.h">
       <Filter>Header Files\System</Filter>
     </ClInclude>
     <ClInclude Include="System\MusicManager.h">
@@ -226,6 +217,9 @@
     </ClInclude>
     <ClInclude Include="HUD\HUDSprite.h">
       <Filter>Header Files\HUD</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManagerBeta.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

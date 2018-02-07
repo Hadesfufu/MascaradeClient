@@ -16,6 +16,7 @@
 	{
 		"action":"game_exit",
 		"inputs":[{
+			"inputType":"default"
 			"type":"keyboard",
 			"key":22,
 			"status":"released",

@@ -7,6 +7,32 @@
 #include <SFML/Graphics.hpp>
 
 namespace Input {
+	using json = nlohmann::json;
+
+	class Key {
+	public:
+		Key() {}
+		Key(sf::Keyboard::Key k) { m_keyboard = k; }
+		Key(sf::Mouse::Button b) { m_mouse = b; }
+		Key(sf::Event::EventType b) { m_event = b; }
+
+		void setKeyboardKey(sf::Keyboard::Key k) { m_keyboard = k; }
+		void setMouseButton(sf::Mouse::Button b) { m_mouse = b; }
+		void setEventType(sf::Event::EventType e) { m_event = e; }
+
+		void load(json& j) {
+			
+		}
+
+		bool compare(sf::Keyboard::Key k) { return (k == m_keyboard); }
+		bool compate(sf::Mouse::Button b) { return (b == m_mouse); }
+		bool compate(sf::Event::EventType e) { return (e == m_event); }
+
+	private:
+		sf::Keyboard::Key m_keyboard = sf::Keyboard::Unknown;
+		sf::Mouse::Button m_mouse = sf::Mouse::Button::ButtonCount;
+		sf::Event::EventType m_event = sf::Event::Count; 
+	};
 
 	class Input
 	{
@@ -17,10 +43,16 @@ namespace Input {
 		virtual void load(nlohmann::json& j)
 		{
 			m_status = j.at("status");
+			m_action = j.at("action");
 		};
+
+		Key getKey() { return m_key; }
 
 	private:
 		std::string m_status;
+		std::string m_action;
+		Key			m_key;
+		bool enabled = true; 
 	};
 
 	class KeyboardInput : public Input
@@ -39,19 +71,18 @@ namespace Input {
 		
 	private: 
 		bool m_alt, m_shift, m_ctrl, m_windows;
-		sf::Keyboard::Key m_key;
 		sf::Event::EventType m_type;
 		int language; 
 	};
 
 	class MouseInput : public Input
 	{
-		MouseInput(json& h) : Input(j) {};
+	public: 
+		MouseInput(json& j) : Input(j) {};
 		~MouseInput();
 
 	private:
 
-		sf::Mouse::Button m_key;
 	};
 
 	class ManagerBeta : public Singleton<ManagerBeta>
@@ -59,7 +90,7 @@ namespace Input {
 		friend class Singleton<ManagerBeta>;
 	public:
 		ManagerBeta() { load(); };
-		~ManagerBeta();
+		~ManagerBeta() {};
 
 		void addEventTrigger(sf::Event::EventType type, std::string& string) {
 			m_eventTrigger.emplace(type, string);
@@ -72,25 +103,12 @@ namespace Input {
 				std::string action = actions.at("action");
 				for(auto& input: actions.at("inputs"))
 				{
-					std::string type = input.at("type");
-					if (type == "keyboard")
-					{
-						m_keyboardinputs.emplace(KeyboardInput(input), action);
-					}
-					else if (type == "mouse")
-					{
-						m_mouseinputs.emplace(MouseInput(input), action);
-					}
-					else
-						Log::error("ManagerBeta-load") << "Input type not recognised";
+					m_events.emplace(Key(input), action);
 				}
 			}
 		}
 	private: 
-
-		std::map<sf::Event::EventType, std::string> m_eventTrigger; 
-		std::map<KeyboardInput, std::string>		m_keyboardinputs;
-		std::map<MouseInput, std::string>			m_mouseinputs;
+		std::multimap<Key, std::string>					m_events;
 	};
 }
 

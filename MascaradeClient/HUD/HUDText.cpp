@@ -75,8 +75,8 @@ namespace HUD {
 		//String
 		/////////////////
 		try {
-			m_text.setString(node.at("string"));
-
+			std::string s = node.at("string");
+			m_text.setString(sf::String(s));
 		}
 		catch (...) {}
 
