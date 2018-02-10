@@ -212,7 +212,7 @@
     <ClInclude Include="HUD\HUDRectangle.h" />
     <ClInclude Include="HUD\HUDSprite.h" />
     <ClInclude Include="HUD\HUDText.h" />
-    <ClInclude Include="InputManagerBeta.h" />
+    <ClInclude Include="InputManager.h" />
     <ClInclude Include="MascaradeClient.h" />
     <ClInclude Include="System\debug.h" />
     <ClInclude Include="System\FontHolder.h" />

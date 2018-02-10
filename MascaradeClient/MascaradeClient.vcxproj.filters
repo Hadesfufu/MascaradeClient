@@ -218,7 +218,7 @@
     <ClInclude Include="HUD\HUDSprite.h">
       <Filter>Header Files\HUD</Filter>
     </ClInclude>
-    <ClInclude Include="InputManagerBeta.h">
+    <ClInclude Include="InputManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

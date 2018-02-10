@@ -16,14 +16,8 @@
 	{
 		"action":"game_exit",
 		"inputs":[{
-			"inputType":"default"
-			"type":"keyboard",
-			"key":22,
-			"status":"released",
-			"alt":false,
-			"shift":false,
-			"ctrl":false,
-			"window":false
+			"type":6,
+			"key":36
 			}
 		]
 	}

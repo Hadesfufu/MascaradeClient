@@ -1,1 +1,6 @@
 
+Error (Connection):  Error while connecting :  4
+Debug (ManagerBeta::handleEvent):  12
+Debug (ManagerBeta::handleEvent):  11
+Debug (ManagerBeta::handleEvent):  5
+Debug (ManagerBeta::handleEvent):  4
