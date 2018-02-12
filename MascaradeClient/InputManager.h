@@ -36,18 +36,31 @@ namespace Input {
 	};
 
 	
-	class ManagerBeta : public Singleton<ManagerBeta>
+	class Manager : public Singleton<Manager>
 	{
-		friend class Singleton<ManagerBeta>;
+		friend class Singleton<Manager>;
 	public:
-		ManagerBeta() { load(); }
-		~ManagerBeta() {
+		Manager() { load(); }
+		~Manager() {
 		}
 
 		void addEventTrigger(sf::Event::EventType type, std::string action) {
 			if (m_events.find(type) == m_events.end())
 				m_events.emplace(type, std::map<int, Action>());
 			m_events.at(type).emplace(-1, action);
+		}
+
+		void addKeyboardTrigger(sf::Event::EventType type, sf::Keyboard::Key key, std::string action) {
+			if (m_events.find(type) == m_events.end())
+				m_events.emplace(type, std::map<int, Action>());
+			m_events.at(type).emplace(key, action);
+		}
+
+
+		void addMouseTrigger(sf::Event::EventType type, sf::Mouse::Button button, std::string action) {
+			if (m_events.find(type) == m_events.end())
+				m_events.emplace(type, std::map<int, Action>());
+			m_events.at(type).emplace(button, action);
 		}
 
 		void handleEvent(sf::Event& event) {
@@ -62,8 +75,6 @@ namespace Input {
 					m_events.at(event.type).at(-1).launch(event);
 			}
 			catch (...) {
-				//Log::error("ManagerBeta::handleEvent") << "input not recognized";
-				Log::debug("ManagerBeta::handleEvent") << event.type;
 			}
 		}
 

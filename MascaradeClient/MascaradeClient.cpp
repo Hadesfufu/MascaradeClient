@@ -2,17 +2,19 @@
 #include <iostream>
 #include "Log.h"
 #include "Data.h"
-#include "InputManagerBeta.h"
+#include "InputManager.h"
 #include "Updater.h"
 #include "Drawer.h"
 #include "NotificationManager.h"
+#include "MenuManager.h"
 
 
 MascaradeClient::MascaradeClient()
 {
 	Drawer::I()->setWindow(&m_window);
 	NotificationManager::I()->AddObserver("game_exit", this, &MascaradeClient::exit);
-	Input::ManagerBeta::I()->addEventTrigger(sf::Event::Closed, "game_exit");
+	Input::Manager::I()->addEventTrigger(sf::Event::Closed, "game_exit");
+	MenuManager::I()->load();
 }
 
 
@@ -27,11 +29,7 @@ void MascaradeClient::launch()
 	while (m_window.isOpen()) {
 		sf::Event e;
 		while (m_window.pollEvent(e))
-			Input::ManagerBeta::I()->handleEvent(e);
-
-		/*while (m_window.pollEvent(e))
-			Input::Manager::I()->handelInputEvent(e);
-		Input::Manager::I()->notifyClickingAction();*/
+			Input::Manager::I()->handleEvent(e);
 		
 		Updater::I()->onUpdate();
 		Drawer::I()->draw();

@@ -180,9 +180,13 @@
     <ClCompile Include="HUD\HUDRectangle.cpp" />
     <ClCompile Include="HUD\HUDSprite.cpp" />
     <ClCompile Include="HUD\HUDText.cpp" />
-    <ClCompile Include="InputManagerBeta.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="MascaradeClient.cpp" />
+    <ClCompile Include="MenuButton.cpp" />
+    <ClCompile Include="MenuContainer.cpp" />
+    <ClCompile Include="MenuElement.cpp" />
+    <ClCompile Include="MenuManager.cpp" />
+    <ClCompile Include="Sprite3D.cpp" />
     <ClCompile Include="System\debug.cpp" />
     <ClCompile Include="System\FontHolder.cpp" />
     <ClCompile Include="System\Log.cpp" />
@@ -214,6 +218,11 @@
     <ClInclude Include="HUD\HUDText.h" />
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="MascaradeClient.h" />
+    <ClInclude Include="MenuButton.h" />
+    <ClInclude Include="MenuContainer.h" />
+    <ClInclude Include="MenuElement.h" />
+    <ClInclude Include="MenuManager.h" />
+    <ClInclude Include="Sprite3D.h" />
     <ClInclude Include="System\debug.h" />
     <ClInclude Include="System\FontHolder.h" />
     <ClInclude Include="System\json.hpp" />
