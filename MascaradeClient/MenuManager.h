@@ -20,8 +20,12 @@ public:
 
 	void manageClick(NotificationManager::Dictionary dic);
 
+	void changeContainer(MenuContainer* cont);
+
 private:
-	std::vector<MenuElement*> m_elements;
+	MenuContainer m_rootContainer;
+	MenuContainer* m_currentContainer;
+	//std::vector<MenuElement*> m_elements;
 };
 
 

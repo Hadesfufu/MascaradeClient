@@ -63,7 +63,7 @@ namespace sf
 
 
 
-											// get a standard sprite formed similarly to sprite3d
+		// get a standard sprite formed similarly to sprite3d
 		const sf::Sprite getSprite() const;
 
 

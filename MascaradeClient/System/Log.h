@@ -16,6 +16,12 @@
 #include <fstream>
 #include <string>
 
+#define LOG_SFML
+
+#ifdef LOG_SFML
+#include <SFML/Graphics.hpp>
+#endif
+
 class Log
 {
 public:
@@ -53,6 +59,14 @@ public:
 	Log& operator <<(double              data);
 	Log& operator <<(const char*         data);
 	Log& operator <<(std::string		 data);
+#ifdef LOG_SFML
+	Log& operator <<(sf::Vector2f        data);
+	Log& operator <<(sf::Vector2i        data);
+	Log& operator <<(sf::Vector2u        data);
+	Log& operator <<(sf::IntRect	     data);
+	Log& operator <<(sf::FloatRect       data);
+#endif
+		
 	
 private:
 	enum Level

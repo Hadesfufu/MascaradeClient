@@ -1,2 +1,4 @@
 
+Info (Texture Chargée):   ! path : data/images/buttonback.png
+Info (Font Chargée):   ! path : data/fonts/Roboto.ttf
 Error (Connection):  Error while connecting :  4

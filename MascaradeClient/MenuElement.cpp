@@ -3,21 +3,17 @@
 #include "MenuContainer.h"
 
 
-MenuElement::MenuElement()
-{
-}
-
 
 MenuElement::~MenuElement()
 {
 }
 
-MenuElement* MenuElement::create(json& j)
+MenuElement* MenuElement::create(MenuContainer* parent, json& j)
 {
 	if (j.at("type") == "button")
-		return new MenuButton(j);
+		return new MenuButton(parent, j);
 	else if (j.at("type") == "container")
-		return new MenuContainer(j);
+		return new MenuContainer(parent, j);
 	else
 		Log::error("MenuContainer::load") << "Element type not recognized";
 }

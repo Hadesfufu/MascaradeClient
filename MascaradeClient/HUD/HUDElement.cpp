@@ -47,7 +47,10 @@ namespace HUD {
 				frect.height = childLoader.at("height");
 				setMargin(frect);
 			}
-		}catch(...){}
+		}catch(...)
+		{
+			Log::error() << "HUD loading error";
+		}
 
 		/////////////////
 		//Padding
@@ -61,7 +64,10 @@ namespace HUD {
 			setPadding(frect);
 		}
 		}
-		catch (...) {}
+		catch (...)
+		{
+			Log::error() << "HUD loading error";			
+		}
 		
 		/////////////////
 		//Origin
@@ -73,7 +79,9 @@ namespace HUD {
 			setOrigin(vec);
 		}
 		}
-		catch (...) {}
+		catch (...) {
+			Log::error() << "HUD loading error";
+		}
 
 		/////////////////
 		//Position
@@ -84,7 +92,9 @@ namespace HUD {
 			vec.x = childLoader.at("x");
 			vec.y = childLoader.at("y");
 		}
-		}catch (...) {}
+		}catch (...) {
+			Log::error() << "HUD loading error";
+		}
 		setPosition(vec);
 
 
@@ -98,7 +108,9 @@ namespace HUD {
 			setSize(vec);
 		}
 		}
-		catch (...) {}
+		catch (...) {
+			Log::error() << "HUD loading error";
+		}
 
 		/////////////////
 		//SizePercent
@@ -110,7 +122,9 @@ namespace HUD {
 			setSizePercent(vec);
 		}
 		}
-		catch (...) {}
+		catch (...) {
+			Log::error() << "HUD loading error";
+		}
 
 		/////////////////
 		//FloatRight
@@ -120,7 +134,9 @@ namespace HUD {
 			setFloatRight();
 		}
 		}
-		catch (...) {}
+		catch (...) {
+			Log::error() << "HUD loading error";
+		}
 		
 		/////////////////
 		//FloatRight
@@ -130,7 +146,9 @@ namespace HUD {
 			setFloatBot();
 		}
 		}
-		catch (...) {}
+		catch (...) {
+			Log::error() << "HUD loading error";
+		}
 		/////////////////
 		//PositionPercent
 		/////////////////
@@ -141,14 +159,18 @@ namespace HUD {
 			setPositionPercent(vec);
 		}
 		}
-		catch (...) {}
+		catch (...) {
+			Log::error() << "HUD loading error";
+		}
 
 		/////////////////
 		//Action
 		/////////////////
 		try {
 			NotificationManager::I()->AddObserver(node.at("action"), this, &Element::updateFromGame);
-		}catch(...){}
+		}catch(...){
+			Log::error() << "HUD loading error";
+		}
 	}
 
 

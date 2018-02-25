@@ -15,7 +15,7 @@ namespace HUD {
 		Manager();
 		~Manager();
 
-		void load(sf::Vector2f& windowSize);
+		void load(std::string s, sf::Vector2f& windowSize);
 		void clear();
 
 		void update();

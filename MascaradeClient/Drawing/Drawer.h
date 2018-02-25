@@ -99,7 +99,8 @@ public:
 	DrawerStructures::Drawable*		getDrawable(const sf::Drawable* elem);
 	DrawerStructures::Z_index*		getLayer(int);
 	DrawerStructures::Z_index*		getLayer(std::string layer);
-
+	sf::Vector2f					getWindowSize() { if (m_Window) return sf::Vector2f(m_Window->getSize()); else return sf::Vector2f(-1, -1); }
+		
 	////////////////////////////////////////////////////////////
 	// Setters
 	////////////////////////////////////////////////////////////

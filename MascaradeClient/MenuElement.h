@@ -5,21 +5,28 @@
 #ifndef MENUELEMENT_H
 #define MENUELEMENT_H
 #include "Data.h"
-#include "Sprite3D.h"
-#include <SFML/Graphics/Text.hpp>
+#include <SFML/Graphics/Drawable.hpp>
 
-class MenuElement
+class MenuContainer;
+
+class MenuElement : public sf::Drawable
 {
 public:
-	MenuElement();
+	MenuElement(MenuContainer* parent) { m_parent = parent; }
 	~MenuElement();
 
 	virtual void load(json&) = 0;
 
-	static MenuElement* create(json& j);
+	static MenuElement* create(MenuContainer* container,  json& j);
+
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const = 0;
+
+	virtual void setPosition(sf::Vector2f position) = 0;
+
+protected:
+
+	MenuContainer* m_parent;
 private:
-	sf::Text		m_text;
-	sf::Sprite3d	m_background;
 
 };
 

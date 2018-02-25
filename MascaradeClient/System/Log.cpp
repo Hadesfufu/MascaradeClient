@@ -134,3 +134,30 @@ Log& Log::operator <<(std::string  data){
 	std::cout << " " << data;
 	return *this;
 }
+#ifdef LOG_SFML
+Log& Log::operator <<(sf::Vector2f	data) {
+	logFile << " X = " << data.x << " Y = " << data.y;
+	std::cout << " X = " << data.x << " Y = " << data.y;
+	return *this;
+}
+Log& Log::operator <<(sf::Vector2i	data) {
+	logFile << " X = " << data.x << " Y = " << data.y;
+	std::cout << " X = " << data.x << " Y = " << data.y;
+	return *this;
+}
+Log& Log::operator <<(sf::Vector2u	data) {
+	logFile << " X = " << data.x << " Y = " << data.y;
+	std::cout << " X = " << data.x << " Y = " << data.y;
+	return *this;
+}
+Log& Log::operator <<(sf::IntRect	data) {
+	logFile << " Left = " << data.left << " Top = " << data.top << " Width = " << data.width << " Height = " << data.height;
+	std::cout << " Left = " << data.left << " Top = " << data.top << " Width = " << data.width << " Height = " << data.height;
+	return *this;
+}
+Log& Log::operator <<(sf::FloatRect data) {
+	logFile << " Left = " << data.left << " Top = " << data.top << " Width = " << data.width << " Height = " << data.height;
+	std::cout << " Left = " << data.left << " Top = " << data.top << " Width = " << data.width << " Height = " << data.height;
+	return *this;
+}
+#endif

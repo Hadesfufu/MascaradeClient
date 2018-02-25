@@ -2,16 +2,15 @@
 #include <iostream>
 #include "Log.h"
 #include "Data.h"
-#include "InputManager.h"
 #include "Updater.h"
 #include "Drawer.h"
 #include "NotificationManager.h"
 #include "MenuManager.h"
 
-
 MascaradeClient::MascaradeClient()
 {
 	Drawer::I()->setWindow(&m_window);
+	loadWindow();
 	NotificationManager::I()->AddObserver("game_exit", this, &MascaradeClient::exit);
 	Input::Manager::I()->addEventTrigger(sf::Event::Closed, "game_exit");
 	MenuManager::I()->load();
@@ -25,7 +24,6 @@ MascaradeClient::~MascaradeClient()
 void MascaradeClient::launch()
 {
 	m_connection.connect(Data::json().at("host"), Data::json().at("port"));
-	loadWindow();
 	while (m_window.isOpen()) {
 		sf::Event e;
 		while (m_window.pollEvent(e))

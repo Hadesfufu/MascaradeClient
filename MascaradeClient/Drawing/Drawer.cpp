@@ -1,6 +1,8 @@
 
 #include "Drawer.h"
 #include <iostream>
+#include "TextureHolder.h"
+#include "../Sprite3D.h"
 
 Drawer::Drawer() : 
 m_Window(nullptr)
@@ -17,8 +19,7 @@ void Drawer::draw(){
 		return;
 	updateAnims();
 	//updateParallax();
-	m_Window->clear(sf::Color(208, 244, 247));
-	m_Window->setView(m_Camera);
+	m_Window->clear(sf::Color::White);
 	for (auto it = m_Layers.begin(); it != m_Layers.end() && !it->second.hidden; ++it){
 		for (auto it2 = it->second.drawables.begin(); it2 != it->second.drawables.end(); ++it2){
 			if (!it2->drawable)
@@ -38,6 +39,13 @@ void Drawer::draw(){
 		}
     }
 	m_Window->display();
+	/*sf::Sprite3d sprite;
+	sf::Texture* tex = TextureHolder::I()->getTexture("buttonback");
+	sprite.setTexture(*tex);
+	m_Window->clear();
+	//m_Window->draw(sprite);
+	//m_Window->draw(*m_Layers.at(0).drawables.at(0).drawable);
+	m_Window->display();*/
 }
 
 void Drawer::updateAnims(){
@@ -201,14 +209,14 @@ sf::Time Drawer::interruptAnimation(DrawingAnimation* anim)
 bool Drawer::setWindow(sf::RenderWindow* window){
 	m_Window = window;
 	sf::Vector2u size = m_Window->getSize();
-	m_Camera.setSize(sf::Vector2f((float)size.x, (float)size.y));
-	m_Camera.setCenter((float)size.x / 2, (float)size.y / 2);
+	//m_Camera.setSize(sf::Vector2f((float)size.x, (float)size.y));
+	//m_Camera.setCenter((float)size.x / 2, (float)size.y / 2);
 	return true; 
 }
 
 void Drawer::loadStaticLayers()
 {
-	if (Data::exist("StaticLayers")) {
+	if (Data::exist(Data::json(), "StaticLayers")) {
 		for (auto& layer : Data::json().at("StaticLayers")) {
 			m_StaticLayers.emplace(layer.at("name"), layer.at("id"));
 		}

@@ -14,12 +14,12 @@ namespace HUD {
 		NotificationManager::I()->RemoveObserver(m_root);
 	}
 
-	void HUD::Manager::load(sf::Vector2f& vec)
+	void HUD::Manager::load(std::string s, sf::Vector2f& vec)
 	{
 		////////////////////////////////////////////////////////////
 		// Load document
 		////////////////////////////////////////////////////////////
-		m_root = new Container(nullptr, Data::json().at("HUD"));
+		m_root = new Container(nullptr, Data::json().at(s));
 		m_root->setSize(vec);
 		NotificationManager::I()->AddObserver("CameraUpdate", m_root, &Container::updateFromCamera);
 		m_root->updateFromCamera();
