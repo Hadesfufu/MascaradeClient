@@ -40,5 +40,5 @@ void MenuButton::setPosition(sf::Vector2f position)
 }
 
 void MenuButton::setAction(std::string s) {
-	Input::Manager::I()->addMouseTrigger(sf::Event::MouseButtonPressed, sf::Mouse::Button::Left, s, &m_background, (sf::Vector2f) m_background.getTexture()->getSize());
+	Input::Manager::I()->addMouseTrigger(sf::Event::MouseButtonPressed, sf::Mouse::Button::Left, s, &m_background);
 }

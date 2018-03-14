@@ -20,7 +20,6 @@ public:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 	virtual	void setPosition(sf::Vector2f position) { m_button.setPosition(position); };
-	virtual void setMyselfAsCurrentContainer();
 	void putChildrenInDrawer();
 
 private:
