@@ -19,6 +19,8 @@ void MenuButton::load(nlohmann::json& j)
 		m_text.setString((Data::get<sf::String>(j.at("text"))));
 		m_background.setOrigin(0, m_background.getGlobalBounds().height / 2);
 		m_text.setOrigin(0, m_text.getLocalBounds().height / 2);
+		if (Data::exist(j, "action"))
+			setAction(j.at("action"));
 	}catch(...)
 	{
 		Log::error("MenuButton::load") << "Button is badly done";
@@ -37,3 +39,6 @@ void MenuButton::setPosition(sf::Vector2f position)
 	m_background.setPosition(position);
 }
 
+void MenuButton::setAction(std::string s) {
+	Input::Manager::I()->addMouseTrigger(sf::Event::MouseButtonPressed, sf::Mouse::Button::Left, s, &m_background, (sf::Vector2f) m_background.getTexture()->getSize());
+}

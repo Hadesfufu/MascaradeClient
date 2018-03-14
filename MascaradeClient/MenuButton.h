@@ -21,6 +21,7 @@ public:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 	virtual void setPosition(sf::Vector2f position);
+	virtual void setAction(std::string);
 
 private:
 	sf::Text		m_text;

@@ -6,6 +6,7 @@
 #define MENUELEMENT_H
 #include "Data.h"
 #include <SFML/Graphics/Drawable.hpp>
+#include "InputManager.h"
 
 class MenuContainer;
 

@@ -18,9 +18,7 @@ public:
 
 	void load();
 
-	void manageClick(NotificationManager::Dictionary dic);
-
-	void changeContainer(MenuContainer* cont);
+	void changeContainer(NotificationManager::Dictionary cont);
 
 private:
 	MenuContainer m_rootContainer;

@@ -31,19 +31,31 @@
 		"charSize": 38,
 		"color": { "r" : 255, "g" : 0, "b" : 0, "a" : 255},
 		"font" : "Roboto.ttf",
-		"texture" : "buttonback"
+    "texture": "buttonback",
+    "action" : "play"
 	},
+  {
+    "type": "container",
+    "elements": [
+
+    ],
+    "button": {
+      "text": "Option",
+      "charSize": 38,
+      "color": {
+        "r": 255,
+        "g": 0,
+        "b": 0,
+        "a": 255
+      },
+      "font": "Roboto.ttf",
+      "texture": "buttonback"
+    }
+  },
 	{
 		"type" : "button",
-		"text" : "Option",
-		"charSize": 38,
-		"color": { "r" : 255, "g" : 0, "b" : 0, "a" : 255},
-		"font" : "Roboto.ttf",
-		"texture" : "buttonback"
-	},
-	{
-		"type" : "button",
-		"text" : "Exit",
+    "text": "Exit",
+    "action" : "game_exit",
 		"charSize": 38,
 		"color": { "r" : 255, "g" : 0, "b" : 0, "a" : 255},
 		"font" : "Roboto.ttf",

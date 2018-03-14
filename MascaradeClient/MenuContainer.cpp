@@ -1,5 +1,6 @@
 #include "MenuContainer.h"
 #include "Drawer.h"
+#include "MenuManager.h"
 
 MenuContainer::~MenuContainer()
 {
@@ -9,7 +10,12 @@ void MenuContainer::load(nlohmann::json& j)
 {
 	if(Data::exist(j, "button"))
 		m_button.load(j.at("button"));
+	m_button.setAction("changeContainer");
 	sf::Vector2f ruler = sf::Vector2f(0, Drawer::I()->getWindowSize().y);
+	
+	if (!Data::exist(j, "elements"))
+		return;
+
 	float nbItem = j.at("elements").size();
 	float i = 1;
 	float multiple;
@@ -36,4 +42,3 @@ void MenuContainer::putChildrenInDrawer()
 		Drawer::I()->addToLayer(0, elem);
 	}
 }
-
