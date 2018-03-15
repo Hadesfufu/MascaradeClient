@@ -37,8 +37,9 @@ void MenuContainer::draw(sf::RenderTarget& target, sf::RenderStates states) cons
 void MenuContainer::putChildrenInDrawer()
 {
 	Drawer::I()->removeLayer(0);
-	for(MenuElement* elem : m_elements)
-	{
-		Drawer::I()->addToLayer(0, elem);
+	Input::Manager::I()->removeMouseTrigger(sf::Event::MouseButtonPressed, sf::Mouse::Button::Left);
+	Log::debug() << this;
+	for (auto it = m_elements.begin(); it != m_elements.end(); ++it) {
+		(*it)->addToView(); 
 	}
 }

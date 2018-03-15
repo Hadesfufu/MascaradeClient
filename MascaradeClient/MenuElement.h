@@ -22,7 +22,13 @@ public:
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const = 0;
 
+	virtual void addToView();
+
 	virtual void setPosition(sf::Vector2f position) = 0;
+
+	MenuContainer* getParentContainer() { return m_parent; }
+
+	
 
 protected:
 

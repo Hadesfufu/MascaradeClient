@@ -1,5 +1,2 @@
 
 Info (Texture Chargée):   ! path : data/images/buttonback.png
-Info (Font Chargée):   ! path : data/fonts/Roboto.ttf
-Error (Connection):  Error while connecting :  4
-Debug (N/A):   Left = 0 Top = 0 Width = 0 Height = 0

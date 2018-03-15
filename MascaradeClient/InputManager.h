@@ -22,14 +22,15 @@ namespace Input {
 		virtual void launch(sf::Event& e) {
 			if (!m_enabeled)
 				return;
-			NotificationManager::Dictionary dico;
 			dico.m_dict.emplace("event",&e);
 			NotificationManager::I()->PostNotification(m_actionString, dico);
 		}
 
+		NotificationManager::Dictionary& getDictionnary() { return dico; }
 	private:
 		std::string m_actionString;
 		bool m_enabeled = true;
+		NotificationManager::Dictionary dico;
 	};
 
 	class MouseRectAction : public Action {
@@ -71,14 +72,7 @@ namespace Input {
 					Action::launch(e);
 			}
 		
-			Log::debug() << "" << m_3dsprite->getGlobalBounds();
-			/*sf::Vector2f pos = m_transform->getPosition();
-			sf::Vector2f scale = m_transform->getScale();
-			if (mouse.x >= pos.x + camera->getRelativePosition().x)
-				if (mouse.x <= pos.x + (m_size.x * scale.x) + camera->getRelativePosition().x)
-					if (mouse.y >= pos.y + camera->getRelativePosition().y)
-						if (mouse.y <= pos.y + (m_size.y * scale.y) + camera->getRelativePosition().y)
-							Action::launch(e);*/
+			//Log::debug() << "" << m_3dsprite->getGlobalBounds();
 		}
 
 
@@ -106,73 +100,87 @@ namespace Input {
 			m_events.clear();
 		}
 
-		void addEventTrigger(sf::Event::EventType type, std::string action) {
+		NotificationManager::Dictionary& addEventTrigger(sf::Event::EventType type, std::string a) {
+			Action* action = new Action(a);
 			if (m_events.find(type) == m_events.end())
 				m_events.emplace(type, std::map<int, std::vector<Action*>>());
 			m_events.at(type).emplace(-1, std::vector<Action*>());
-			m_events.at(type).at(-1).emplace_back(new Action(action));
+			m_events.at(type).at(-1).emplace_back(action);
+			return action->getDictionnary();			
 		}
 
-		void addKeyboardTrigger(sf::Event::EventType type, sf::Keyboard::Key key, std::string action) {
+		NotificationManager::Dictionary& addKeyboardTrigger(sf::Event::EventType type, sf::Keyboard::Key key, std::string a) {
+			Action* action = new Action(a);
 			if (m_events.find(type) == m_events.end())
 				m_events.emplace(type, std::map<int, std::vector<Action*>>());
 			m_events.at(type).emplace(key, std::vector<Action*>());
-			m_events.at(type).at(key).emplace_back(new Action(action));
+			m_events.at(type).at(key).emplace_back(action);
+			return action->getDictionnary();
 		}
 
 		//Trigger only if you click on that area
-		void addMouseTrigger(sf::Event::EventType type, sf::Mouse::Button button, std::string action, sf::Sprite* s) {
+		NotificationManager::Dictionary& addMouseTrigger(sf::Event::EventType type, sf::Mouse::Button button, std::string a, sf::Sprite* s) {
+			MouseRectAction* action = new MouseRectAction(a, s);
 			if (m_events.find(type) == m_events.end())
 				m_events.emplace(type, std::map<int, std::vector<Action*>>());
 			m_events.at(type).emplace(button, std::vector<Action*>());
-			m_events.at(type).at(button).emplace_back(new MouseRectAction(action, s));
+			m_events.at(type).at(button).emplace_back(action);
+			return action->getDictionnary();
 		}
 
-		void addMouseTrigger(sf::Event::EventType type, sf::Mouse::Button button, std::string action, sf::Text* t) {
+		NotificationManager::Dictionary& addMouseTrigger(sf::Event::EventType type, sf::Mouse::Button button, std::string a, sf::Text* t) {
+			MouseRectAction* action = new MouseRectAction(a, t);
 			if (m_events.find(type) == m_events.end())
 				m_events.emplace(type, std::map<int, std::vector<Action*>>());
 			m_events.at(type).emplace(button, std::vector<Action*>());
-			m_events.at(type).at(button).emplace_back(new MouseRectAction(action, t));
+			m_events.at(type).at(button).emplace_back(action);
+			return action->getDictionnary();
 		}
 
-		void addMouseTrigger(sf::Event::EventType type, sf::Mouse::Button button, std::string action, sf::Shape* s) {
+		NotificationManager::Dictionary& addMouseTrigger(sf::Event::EventType type, sf::Mouse::Button button, std::string a, sf::Shape* s) {
+			MouseRectAction* action = new MouseRectAction(a, s);
 			if (m_events.find(type) == m_events.end())
 				m_events.emplace(type, std::map<int, std::vector<Action*>>());
 			m_events.at(type).emplace(button, std::vector<Action*>());
-			m_events.at(type).at(button).emplace_back(new MouseRectAction(action, s));
+			m_events.at(type).at(button).emplace_back(action);
+			return action->getDictionnary();
 		}
 
-		void addMouseTrigger(sf::Event::EventType type, sf::Mouse::Button button, std::string action, sf::Sprite3d* s) {
+		NotificationManager::Dictionary& addMouseTrigger(sf::Event::EventType type, sf::Mouse::Button button, std::string a, sf::Sprite3d* s) {
+			MouseRectAction* action = new MouseRectAction(a, s);
 			if (m_events.find(type) == m_events.end())
 				m_events.emplace(type, std::map<int, std::vector<Action*>>());
 			m_events.at(type).emplace(button, std::vector<Action*>());
-			m_events.at(type).at(button).emplace_back(new MouseRectAction(action, s));
+			m_events.at(type).at(button).emplace_back(action);
+			return action->getDictionnary();
 		}
 
 		//Trigger anywhere you click
-		void addMouseTrigger(sf::Event::EventType type, sf::Mouse::Button button, std::string action) {
+		NotificationManager::Dictionary& addMouseTrigger(sf::Event::EventType type, sf::Mouse::Button button, std::string a) {
+			Action* action = new Action(a);
 			if (m_events.find(type) == m_events.end())
 				m_events.emplace(type, std::map<int, std::vector<Action*>>());
 			m_events.at(type).emplace(button, std::vector<Action*>());
-			m_events.at(type).at(button).emplace_back(new Action(action));
+			m_events.at(type).at(button).emplace_back(action);
+			return action->getDictionnary();
 		}
 
 		void removeEventTrigger(sf::Event::EventType type) {
 			if (m_events.find(type) == m_events.end())
 				return;
-			m_events.at(type).erase(-1);
+			m_events.at(type).at(-1).clear();
 		}
 
 		void removeKeyboardTrigger(sf::Event::EventType type, sf::Keyboard::Key key) {
 			if (m_events.find(type) == m_events.end())
 				return;
-			m_events.at(type).erase(key);
+			m_events.at(type).at(key).clear();
 		}
 
 		void removeMouseTrigger(sf::Event::EventType type, sf::Mouse::Button button) {
 			if (m_events.find(type) == m_events.end())
 				return;
-			m_events.at(type).erase(button);
+			m_events.at(type).at(button).clear();
 		}
 
 

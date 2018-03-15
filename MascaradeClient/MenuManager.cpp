@@ -21,9 +21,11 @@ void MenuManager::load()
 
 void MenuManager::changeContainer(NotificationManager::Dictionary dic)
 {
-	if (dic.m_object) {
+	try {
+		m_currentContainer = ((MenuButton*) dic.m_dict.at("button"))->getParentContainer();
+		m_currentContainer->putChildrenInDrawer();
+	}
+	catch (...) {
 		Log::error("MenuManager::changeContainer") << "badly made change container";
 	}
-	m_currentContainer = (MenuContainer*) dic.m_object;
-	m_currentContainer->putChildrenInDrawer();
 }

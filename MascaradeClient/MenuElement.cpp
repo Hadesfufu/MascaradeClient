@@ -18,3 +18,7 @@ MenuElement* MenuElement::create(MenuContainer* parent, json& j)
 		Log::error("MenuContainer::load") << "Element type not recognized";
 }
 
+
+void MenuElement::addToView() {
+	Drawer::I()->addToLayer(0, this);
+}

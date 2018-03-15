@@ -19,13 +19,16 @@ public:
 
 	virtual void load(nlohmann::json&);
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
+	virtual void addToView();
 
 	virtual void setPosition(sf::Vector2f position);
-	virtual void setAction(std::string);
+	virtual void setAction(std::string s) { m_action = s; }
+	virtual void registerAction();
 
 private:
 	sf::Text		m_text;
 	sf::Sprite3d	m_background;
+	std::string		m_action;
 };
 
 #endif
